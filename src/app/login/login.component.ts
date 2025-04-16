@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserstorageService } from '../services/storage/userstorage.service';
 import { CheckoutService } from '../customer/service/checkout.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginComponent implements OnInit {
   userInfo: any;
   isLoading: boolean = false;
   private messageListener!: (event: MessageEvent) => void;
-
+  private BASIC_URL = environment.BASIC_URL;
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -236,7 +237,7 @@ export class LoginComponent implements OnInit {
 
   googleLogin() {
     window.open(
-      'http://localhost:8080/oauth2/authorization/google',
+      `${this.BASIC_URL}oauth2/authorization/google`,
       '_blank',
       'width=600,height=600'
     );
@@ -244,7 +245,7 @@ export class LoginComponent implements OnInit {
 
   facebookLogin() {
     window.open(
-      'http://localhost:8080/oauth2/authorization/facebook',
+      `${this.BASIC_URL}oauth2/authorization/facebook`,
       '_blank',
       'width=600,height=600'
     );
