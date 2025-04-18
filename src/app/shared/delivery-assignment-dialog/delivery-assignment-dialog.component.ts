@@ -31,7 +31,7 @@ export class DeliveryAssignmentDialogComponent implements OnInit {
         next: (staffs)=>{
           this.deliveryStaffs = staffs;
         },
-        error: (err)=>{
+        error: ()=>{
           this.snackBar.open('Error loading delivery staff', 'Close', { duration: 3000 });
         }
       }
@@ -44,7 +44,8 @@ export class DeliveryAssignmentDialogComponent implements OnInit {
           this.dialogRef.close(true);
         },
         error: (err)=>{
-          this.snackBar.open('Error assigning delivery', 'Close', { duration: 3000 });       
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+          this.snackBar.open(errorMessage, 'Close', { duration: 3000 });       
         }
       }
     );

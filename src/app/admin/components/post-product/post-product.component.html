@@ -67,14 +67,14 @@
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Mô tả</mat-label>
-                <textarea matInput formControlName="description" required></textarea>
-                <mat-error *ngIf="productForm.get('description')?.hasError('required')">
+                <textarea matInput formControlName="description" ></textarea>
+                <!-- <mat-error *ngIf="productForm.get('description')?.hasError('required')">
                     Mô tả sản phẩm là bắt buộc
-                </mat-error>
+                </mat-error> -->
             </mat-form-field>
 
             <button mat-raised-button color="accent" type="submit" class="product-btn"
-                [disabled]="productForm.invalid || !selectedFile">Thêm</button>
+                [disabled]="productForm.invalid ">Thêm</button>
         </form>
     </mat-card>
 </div>

@@ -1,6 +1,6 @@
 import { CartService } from './../services/cart/cart.service';
 import { Router } from '@angular/router';
-import { CustomerService } from './../services/customer/customer.service';
+
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product/product.service';
 
@@ -45,11 +45,8 @@ export class ProductPageComponent implements OnInit {
     this.products = [];
     this.productService.getAllProducts().subscribe(res => {
       if (Array.isArray(res)) {  // Kiểm tra res là mảng không
-        this.products = res.map((element: any) => ({
-          ...element,  // Giữ nguyên các thuộc tính gốc
-          processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null,  // Thêm processedImg nếu có byteImg
-          
-        }));
+    
+        this.products = res;
         this.filteredProducts = [...this.products];
         this.updatePagination(); // Cập nhật lại phân trang khi dữ liệu mới được lấy
       } else {

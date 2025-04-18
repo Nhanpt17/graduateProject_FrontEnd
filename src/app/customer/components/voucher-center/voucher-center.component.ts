@@ -37,7 +37,7 @@ export class VoucherCenterComponent implements OnInit{
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Không thể tải phiếu giảm giá khả dụng:', err);
+       
         this.error = 'Không thể tải phiếu giảm giá khả dụng. Vui lòng thử lại sau.';
         this.isLoading = false;
         this.showErrorSnackbar(this.error);
@@ -49,7 +49,7 @@ export class VoucherCenterComponent implements OnInit{
         this.myVouchers = vouchers;
       },
       error: (err) => {
-        console.error('Không thể tải phiếu giảm giá của bạn:', err);
+       
         this.showErrorSnackbar('Không thể tải phiếu giảm giá của bạn. Vui lòng thử lại sau.');
       }
     });
@@ -59,7 +59,7 @@ export class VoucherCenterComponent implements OnInit{
         this.customerPoints = points;
       },
       error: (err) => {
-        console.error('Failed to load customer points:', err);
+       
         this.showErrorSnackbar('Không thể tải số dư điểm của bạn.');
       }
     });

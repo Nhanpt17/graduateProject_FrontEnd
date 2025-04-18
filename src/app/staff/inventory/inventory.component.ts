@@ -55,10 +55,8 @@ export class InventoryComponent implements OnInit{
     this.productService.getAllProducts().subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
-          this.products = res.map((element: any) => ({
-            ...element,
-            processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null
-          }));
+          
+          this.products = res;
           this.filteredProducts = [...this.products];
           this.updatePagination();
           this.updateInventoryStats();
@@ -104,13 +102,7 @@ export class InventoryComponent implements OnInit{
         return name.includes(term)
           && (this.selectedCategory.id === null || product.categoryId === this.selectedCategory.id)
       } 
-      // (
-        
-      //   // product.name.toLowerCase().includes(term) 
-      //   // || (product.description && product.description.toLowerCase().includes(term))
-      // )
-      // &&
-      // (this.selectedCategory.id === null || product.categoryId === this.selectedCategory.id)
+     
         );
     }
     this.currentPage = 0;

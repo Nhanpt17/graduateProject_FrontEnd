@@ -32,8 +32,6 @@ export class DashboardComponent implements OnInit,AfterViewInit{
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-
-    
   }
 
 
@@ -52,13 +50,12 @@ export class DashboardComponent implements OnInit,AfterViewInit{
     this.products = [];
     this.adminService.getAllProducts().subscribe(res => {
       if (Array.isArray(res)) {  // Kiểm tra res là mảng không
-        this.products = res.map((element: any) => ({
-          ...element,  // Giữ nguyên các thuộc tính gốc
-          processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null  // Thêm processedImg nếu có byteImg
-        }));
+       
+        this.products = res;
         this.dataSource.data = this.products;
         this.length = this.products.length; // Cập nhật tổng số items
       } else {
+        
         this.snackBar.open('Lỗi khi tải dữ liệu sản phẩm', 'Đóng', {
           duration: 3000,
           panelClass: 'error-snackbar'

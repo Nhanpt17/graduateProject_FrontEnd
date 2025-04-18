@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log("chạy lại ngOninit");
+   
 
     window.addEventListener("storage", (event) => {
       if (event.key === "logout") {
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
 
         if (!this.flag) {
           this.flag = true;
-          console.log("flag:", this.flag);
+         
           this.userName = UserstorageService.getUserName();
 
 
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
           else
             this.userAvatar = 'https://static-00.iconduck.com/assets.00/user-square-icon-256x256-w0pqfldx.png';
 
-          console.log("avatar:", this.userAvatar);
+          
         }
 
       }
@@ -84,11 +84,10 @@ export class AppComponent implements OnInit {
 
     })
 
-    console.log("chạy hàm nè");
-    console.log("user id: ", UserstorageService.getUserId());
-    this.authService.getUserById(Number(UserstorageService.getUserId())).subscribe(res => {
-      console.log('data lấy ở app:', res);
-    });
+    
+    // this.authService.getUserById(Number(UserstorageService.getUserId())).subscribe(res => {
+    //   console.log('data lấy ở app:', res);
+    // });
 
   }
 

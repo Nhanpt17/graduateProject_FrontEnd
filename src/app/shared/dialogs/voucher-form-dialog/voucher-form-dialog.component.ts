@@ -144,13 +144,14 @@ export class VoucherFormDialogComponent implements OnInit {
     if (this.isEditMode) {
       this.voucherService.updateVoucher(Number(this.data.voucher?.id), voucherData).subscribe({
         next: () => {
+         
           this.dialogRef.close(true);
 
         },
         error: (err) => {
          
-
-          this.snackBar.open('Cập nhật voucher thất bại', 'Close', { duration: 3000 })
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+          this.snackBar.open(errorMessage, 'Close', { duration: 3000 })
 
         },
       });
@@ -162,15 +163,15 @@ export class VoucherFormDialogComponent implements OnInit {
 
         },
         error: (err) => {
-
-          this.snackBar.open('Tạo voucher voucher thất bại', 'Close', { duration: 3000 })
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+          this.snackBar.open(errorMessage, 'Close', { duration: 3000 })
 
         },
       });
     }
 
 
-    this.dialogRef.close(voucherData);
+    
   }
 
   onCancel(): void {

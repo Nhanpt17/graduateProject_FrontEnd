@@ -78,10 +78,10 @@ export class LoginComponent implements OnInit {
                       } else if (voucherId) {
                         const customerId = Number(UserstorageService.getUserId());
                         this.voucherService.markCustomerVoucherAsUsed(customerId, Number(voucherId)).subscribe({
-                          next: (value) => {
+                          next: () => {
                             console.log("cập nhật trạng thái customervoucher đã sử dụng");
                           },
-                          error: (err) => {
+                          error: () => {
                             this.snackbar.open('Cập nhật trạng thái CustomerVoucher thất bại!', 'Đóng', {
                               duration: 3000,
                               panelClass: ['snackbar-error'],
@@ -110,7 +110,7 @@ export class LoginComponent implements OnInit {
             }
 
           },
-          error: (err) => {
+          error: () => {
             //err
             this.snackbar.open('Không thể lấy thông tin người dùng!', 'Đóng', {
               duration: 3000,
@@ -139,14 +139,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
-    console.log('Dữ liệu hợp lệ:', this.loginForm.value);
+    
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (respone) => {
+      next: () => {
         this.isLoading = false;
         //success
-        console.log('du lieu ra ve la');
-        console.log(respone);
+        
         
         // Kiểm tra nếu có redirectUrl trong localStorage
         const redirectUrl = localStorage.getItem('redirectUrl');
@@ -174,10 +173,10 @@ export class LoginComponent implements OnInit {
                   localStorage.removeItem('voucherId');
                   if (voucherCode) {
                     this.voucherService.incrementVoucherUsage(voucherCode).subscribe({
-                      next: (value) => {
+                      next: () => {
                         console.log("cập nhật số lần voucher đã sử dụng");
                       },
-                      error: (err) => {
+                      error: () => {
                         this.snackbar.open('Cập nhật trạng thái voucher thất bại!', 'Đóng', {
                           duration: 3000,
                           panelClass: ['snackbar-error'],
@@ -187,10 +186,10 @@ export class LoginComponent implements OnInit {
                   } else if (voucherId) {
                     const customerId = Number(UserstorageService.getUserId());
                     this.voucherService.markCustomerVoucherAsUsed(customerId, Number(voucherId)).subscribe({
-                      next: (value) => {
+                      next: () => {
                         console.log("cập nhật trạng thái customervoucher đã sử dụng");
                       },
-                      error: (err) => {
+                      error: () => {
                         this.snackbar.open('Cập nhật trạng thái CustomerVoucher thất bại!', 'Đóng', {
                           duration: 3000,
                           panelClass: ['snackbar-error'],

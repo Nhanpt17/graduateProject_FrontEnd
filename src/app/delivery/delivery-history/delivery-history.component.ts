@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component } from '@angular/core';
+
 import { OrderService } from 'src/app/customer/service/order.service';
 import { OrderStatus } from 'src/app/models/order-status.enum';
 import { UserstorageService } from 'src/app/services/storage/userstorage.service';
@@ -16,7 +17,7 @@ export class DeliveryHistoryComponent {
   
   constructor(
     private orderService: OrderService,
-    private snackBar: MatSnackBar
+    private snackbar:MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -31,8 +32,9 @@ export class DeliveryHistoryComponent {
         this.orders = orders.filter(order => order.status === OrderStatus.COMPLETED);
       },
       error: (err) => {
-        // this.snackBar.open('Error loading orders', 'Close', { d;uration: 3000 })
-        console.log('Lỗi khi tải dữ liệu đơn hàng')
+        const errorMessage = err.error.message || 'Có lỗi xảy ra!';
+      this.snackbar.open(errorMessage,'Đóng',{duration:1000});
+        
       }
     });
   }

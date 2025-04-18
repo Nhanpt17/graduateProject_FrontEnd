@@ -20,7 +20,7 @@
          [class.out-of-stock-card]="product.stock <= 0"
          (click)="product.stock > 0 ? viewProductDetails(product.id,product.categoryId) : null">
       <div class="product-image-container">
-        <img [src]="product.processedImg" [alt]="product.name" class="product-image" 
+        <img [src]="product.imgUrl" [alt]="product.name" class="product-image" 
              [class.out-of-stock-img]="product.stock <= 0" />
         
         <!-- Overlay hết hàng -->

@@ -8,6 +8,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ProductService {
+  getFourNewProduct() {
+    throw new Error('Method not implemented.');
+  }
   private BASIC_URL = environment.BASIC_URL;
 
   constructor(private http:HttpClient, private router:Router) { }
@@ -32,19 +35,14 @@ export class ProductService {
     return this.http.get(this.BASIC_URL+`api/products/category/limit/${categoryId}`);
   }
 
-  buyNow(productId: number) {
-    alert(`Mua ngay sản phẩm có ID: ${productId}`);
-  }
-
-  addToCart(productId: number) {
-    alert(`Thêm vào giỏ hàng sản phẩm có ID: ${productId}`);
-  }
-
 
   viewProductDetails(productId:number, categoryId:number){
     this.router.navigate(['/product-detail',productId, categoryId]);
-    console.log(` sản phẩm có ID: ${productId}`);
-    console.log(` sản phẩm có categoryID: ${categoryId}`);
+  
+  }
+
+  getFourNewProdct():Observable<any>{
+    return this.http.get(this.BASIC_URL+'api/products/top/four');
   }
 
 }

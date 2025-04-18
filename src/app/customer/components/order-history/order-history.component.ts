@@ -27,7 +27,7 @@ export class OrderHistoryComponent implements OnInit{
   loadOrders(){
     this.orderService.getOrdersByUser(Number(this.userId)).subscribe({
       next:(res)=>{
-        console.log("danh sach order: ", res);
+        
         this.orders = res;
       },
       error:(err)=>{
@@ -71,7 +71,8 @@ export class OrderHistoryComponent implements OnInit{
              this.loadOrders();
           },
           error: (err) => {
-            this.snackbar.open("Lỗi khi hủy đơn hàng!",'Đóng',{duration:2000});
+            const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+            this.snackbar.open(errorMessage,'Đóng',{duration:2000});
           }
         });
       }
@@ -88,7 +89,7 @@ export class OrderHistoryComponent implements OnInit{
   }
 
 
-  ////////////////////
+  
 getStatusIcon(status: string): string {
   const statusIcons: { [key: string]: string } = {
     'PENDING': 'hourglass_empty',

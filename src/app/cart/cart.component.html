@@ -13,7 +13,7 @@
           Sản phẩm
         </th>
         <td *matCellDef="let item" mat-cell>
-          <img [src]="'data:image/jpeg;base64,' + item.byteImg" alt="Sản phẩm" class="product-img">
+          <img [src]=" item.imgUrl" alt="Sản phẩm" class="product-img">
         </td>
       </ng-container>
 

@@ -34,7 +34,7 @@ export class DeliveryOrderDetailComponent implements OnInit{
       next: (order) => {
         this.order = order;
       },
-      error: (err) => {
+      error: () => {
         // this.snackBar.open('Error loading order details', 'Close', { duration: 3000 });
         console.log('Lỗi tải chi tiết đơn hàng');
       }
@@ -43,12 +43,14 @@ export class DeliveryOrderDetailComponent implements OnInit{
 
   updateOrderStatus(order: any, status: OrderStatus): void {
     this.orderService.updateOrderStatus(order.id, status).subscribe({
-      next: (updatedOrder) => {
+      next: () => {
         this.snackBar.open('Cập nhật trạng thái thành công', 'Đóng', { duration: 2000 });
         this.loadOrderDetail(order.id);
       },
       error: (err) => {
-        this.snackBar.open('Lỗi khi cập nhật trạng thái', 'Đóng', { duration: 3000 });
+        const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+        
+        this.snackBar.open(errorMessage, 'Đóng', { duration: 3000 });
       }
     });
   }

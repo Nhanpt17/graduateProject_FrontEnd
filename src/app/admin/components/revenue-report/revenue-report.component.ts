@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -25,7 +26,9 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   private destroy$ = new Subject<void>();
 
-  constructor(private reportService: ReportService) {
+  constructor(private reportService: ReportService,
+    private snackbar:MatSnackBar
+  ) {
     Chart.register(...registerables);
   }
   ngAfterViewInit(): void {
@@ -43,16 +46,6 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
   loadReport(): void {
     this.isLoading = true;
     this.destroyCharts();
-
-
-    console.log('Frontend dates (local):', {
-      start: this.startDate.toString(),
-      end: this.endDate.toString()
-    });
-
-    
-
-
     // Format date thành string YYYY-MM-DD (không có timezone)
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -73,7 +66,7 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (report) => {
-          console.log('API Response:', report); // Thêm dòng này
+         
           this.totalRevenue = report.totalRevenue;
           this.isLoading = false;
 
@@ -85,7 +78,9 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
           });
         },
         error: (err) => {
-          console.error('Error loading report:', err);
+          
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+          this.snackbar.open(errorMessage,'Đóng',{duration:1000});
           this.isLoading = false;
         }
       });
@@ -109,10 +104,10 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
 
   createDailyRevenueChart(data: any[]): void {
 
-    console.log("dailyChartRef", this.dailyChartRef);
+   
 
     if (!this.dailyChartRef?.nativeElement) {
-      console.error('Không tìm thấy canvas dailyChart');
+     
       return;
     }
 
@@ -174,7 +169,7 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
     const amounts = data.map(item => item.amount);
 
     if (!this.monthlyChartRef?.nativeElement) {
-      console.error('Không tìm thấy canvas monthlyChart');
+      
       return;
     }
 
@@ -228,14 +223,14 @@ export class RevenueReportComponent implements OnInit, AfterViewInit {
   }
 
   createPaymentMethodChart(data: any[]): void {
-    console.log("paymentMethodChartRef", this.paymentMethodChartRef);
+    
 
     //const canvas = document.getElementById('paymentMethodChart') as HTMLCanvasElement;
     const labels = data.map(item => item.paymentMethod);
     const amounts = data.map(item => item.amount);
 
     if (!this.paymentMethodChartRef?.nativeElement) {
-      console.error('Không tìm thấy canvas paymentMethodChart');
+      
       return;
     }
 

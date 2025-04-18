@@ -34,7 +34,7 @@ export class OrderDetailComponent implements OnInit{
       next: (order:any) => {
         this.order = order;
       },
-      error: (err) => {
+      error: () => {
         this.snackBar.open('Error loading order details', 'Close', { duration: 3000 });
       }
     });
@@ -61,6 +61,7 @@ export class OrderDetailComponent implements OnInit{
   
             },
             error: (err) => {
+              
               this.snackBar.open('Lỗi khi hủy đơn hàng: ' + err.message, 'Đóng', { duration: 3000 });
               
             }

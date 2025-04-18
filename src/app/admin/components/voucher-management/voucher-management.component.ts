@@ -65,6 +65,7 @@ export class VoucherManagementComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+       
         this.loadVouchers();
         this.snackBar.open('Cập nhật voucher thành công', 'Close', { duration: 2000 })
 

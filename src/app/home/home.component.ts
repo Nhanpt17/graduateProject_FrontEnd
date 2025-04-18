@@ -1,6 +1,6 @@
 import { CartService } from './../services/cart/cart.service';
 import { Router } from '@angular/router';
-import { CustomerService } from './../services/customer/customer.service';
+
 import { AppComponent } from './../app.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../services/product/product.service';
@@ -33,10 +33,8 @@ export class HomeComponent implements OnInit {
     this.products = [];
     this.productService.getAllProducts().subscribe(res => {
       if (Array.isArray(res)) {  // Kiểm tra res là mảng không
-        this.products = res.map((element: any) => ({
-          ...element,  // Giữ nguyên các thuộc tính gốc
-          processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null  // Thêm processedImg nếu có byteImg
-        }));
+      
+        this.products =res;
       } else {
         console.error("API response is not an array:", res);
       }
@@ -50,12 +48,10 @@ export class HomeComponent implements OnInit {
   getFeaturedProducts(): void {
     
     // For now, just take the first 4 products
-    this.productService.getAllProducts().subscribe(res => {
+    this.productService.getFourNewProdct().subscribe(res => {
       if (Array.isArray(res)) {
-        this.featuredProducts = res.slice(0, 4).map((element: any) => ({
-          ...element,
-          processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null
-        }));
+    
+        this.featuredProducts = res;
       }
     });
   }
@@ -72,7 +68,7 @@ export class HomeComponent implements OnInit {
     if (product.stock <= 0) {
       return; 
     }
-    console.log("product: ",product);
+    
     this.cartService.addToCart(product);
   }
 

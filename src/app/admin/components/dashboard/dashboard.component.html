@@ -24,7 +24,7 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef class="header-cell">Hình ảnh</mat-header-cell>
         <mat-cell *matCellDef="let product" class="image-cell">
-          <img [src]="product.processedImg || 'assets/images/default-product.png'" 
+          <img [src]="product.imgUrl || 'assets/images/default-product.png'" 
                alt="Product Image" 
                class="product-image"
                matTooltip="Xem hình ảnh"

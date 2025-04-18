@@ -35,8 +35,9 @@ export class DeliveryOrdersComponent {
 
         },
         error: (err) => {
-          // this.snackBar.open('Lỗi tải dữ liệu đơn hàng', 'Đóng', { duration: 3000 })
-          console.log('Lỗi tải dữ liệu đơn hàng');
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+           this.snackBar.open(errorMessage, 'Đóng', { duration: 3000 })
+          
         }
       }
 
@@ -47,12 +48,13 @@ export class DeliveryOrdersComponent {
     this.orderService.updateOrderStatus(order.id, status).subscribe(
 
       {
-        next: (updatedOrder) => {
+        next: () => {
           this.snackBar.open('Order status updated', 'Close', { duration: 2000 });
           this.loadOrders();
         },
         error: (err) => {
-          this.snackBar.open('Error updating order', 'Close', { duration: 3000 });
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+          this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
         }
       }
     );

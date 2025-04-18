@@ -4,6 +4,7 @@ import { OrderService } from './../../service/order.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class PaymentStepperDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<PaymentStepperDialogComponent>,
     private _formBuilder: FormBuilder,
     private orderService: OrderService,
+    private snackbar:MatSnackBar,
     private momoService:MomoService,
     private router:Router
   ) { }
@@ -53,7 +55,7 @@ export class PaymentStepperDialogComponent implements OnInit {
       paymentMethod: this.paymentMethod
     };
     // Lưu hoặc gửi thông tin order đến server
-    console.log(orderInfo);
+    
     this.dialogRef.close(orderInfo);
   }
 
@@ -95,8 +97,9 @@ export class PaymentStepperDialogComponent implements OnInit {
     if (this.thirdFormGroup.value.payment == 'cash') {
       this.orderService.createOrder(orderData).subscribe({
         next: (res)=>{
-          console.log('Đặt hàng thành công', res);
+          
           this.dialogRef.close({ success: true, order: res });
+          this.snackbar.open('Đặt hàng thành công!','Đóng',{duration:2000});
           this.router.navigate(['/customer/order-history']);
         },
         error:(err)=>{
@@ -108,25 +111,30 @@ export class PaymentStepperDialogComponent implements OnInit {
       // 1. Tạo đơn hàng trạng thái PENDING trước
   this.orderService.createOrder(orderData).subscribe({
     next: (orderRes) => {
-      console.log('Tạo đơn hàng tạm thành công', orderRes);
       
       // 2. Gọi API thanh toán Momo với orderId từ đơn hàng vừa tạo
       const amount = String(orderRes.finalAmount); // Chuyển sang đơn vị VND (nếu cần)
       this.momoService.createPayment(amount, orderRes.id).subscribe({
         next: (momoRes :any) => {
           if (momoRes && momoRes.payUrl ) {
+
+            
             // 3. Chuyển hướng đến Momo
+
             window.location.href = momoRes.payUrl;
           }
         },
         error: (momoErr) => {
-          console.error('Lỗi khi tạo thanh toán Momo', momoErr);
+          const errorMessage = momoErr.error.message || 'Có lỗi xảy ra!';
+          this.snackbar.open(errorMessage,'Đóng',{duration:1000});
+         
           this.dialogRef.close({ success: false, err: momoErr });
         }
       });
     },
     error: (orderErr) => {
-      console.error('Lỗi khi tạo đơn hàng', orderErr);
+      const errorMessage = orderErr.error.message || 'Có lỗi xảy ra!';
+      this.snackbar.open(errorMessage,'Đóng',{duration:1000});
       this.dialogRef.close({ success: false, err: orderErr });
     }
   });

@@ -28,7 +28,7 @@ export class UpdateProductComponent implements OnInit{
   ngOnInit(): void {
       this.route.paramMap.subscribe(params=>{
         this.productId = params.get('id');
-        console.log("img: ",this.imagePreview);
+        
       });
 
       this.productForm = this.formBuilder.group({
@@ -36,7 +36,7 @@ export class UpdateProductComponent implements OnInit{
         name:['',[Validators.required,Validators.minLength(3)]],
         price: ['', [Validators.required, Validators.min(1000)]],
         stock: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]*$/)]],
-        description:['',[Validators.required]]
+        description:['']
       });
   
       this.getAllCategories();
@@ -52,18 +52,17 @@ export class UpdateProductComponent implements OnInit{
         price: res.price,
         stock: res.stock,
         description: res.description
+        
       });
 
-      // Nếu có ảnh, cập nhật ảnh preview
-      if (res.byteImg) {
-        this.imagePreview = 'data:image/jpeg;base64,' + res.byteImg;
-        this.existingImage = res.byteImg; // Lưu lại ảnh hiện tại
-      }
+      this.imagePreview = res.imgUrl;
+    
     });
   }
 
   previewImage(){
     if (!this.selectedFile) {
+      
       return; // Nếu không có file nào được chọn, thoát luôn
     }
 
@@ -80,10 +79,9 @@ export class UpdateProductComponent implements OnInit{
   }
 
   getAllCategories():void{
-    console.log("lay all danh muc");
+   
     this.adminService.getAllCategories().subscribe(res=>{
-      console.log("co chay");
-      console.log(res);
+      
       this.categories = res;
     })
   }
@@ -95,10 +93,9 @@ export class UpdateProductComponent implements OnInit{
       formData.append('id',String(this.productId));
       if (this.selectedFile) {
         formData.append('img', this.selectedFile);
-      }else if (this.existingImage) {
-        // Nếu không chọn file mới nhưng có ảnh cũ, gửi lại ảnh cũ
-        const blob = this.dataURItoBlob(this.existingImage);
-        formData.append('img', blob);
+      }else if (this.imagePreview && typeof this.imagePreview === 'string') {
+        // Nếu không chọn file mới, gửi lại URL ảnh cũ (Cloudinary)
+        formData.append('imgUrl', this.imagePreview);
       }
 
       formData.append('categoryId',this.productForm.get('categoryId')?.value);
@@ -107,38 +104,25 @@ export class UpdateProductComponent implements OnInit{
       formData.append('price',this.productForm.get('price')?.value);
       formData.append('stock', this.productForm.get('stock')?.value);
 
-      formData.forEach((value, key) => {
-        console.log(key + ':', value);
-      });
+      console.log('form data: ', formData);
       
-      this.adminService.updateProduct(formData).subscribe((res)=>{
-        if(res.id !=null){
-          this.snackbar.open('Cập nhật sản phẩm thành công!','Đóng',{duration:3000});
-          this.router.navigateByUrl('admin/dashboard');
+      this.adminService.updateProduct(formData).subscribe({
+        next: () => {
+          this.snackbar.open('Cập nhật  thành công!', 'Đóng', { duration: 3000 });
+          this.router.navigate(['admin/dashboard'])
+        },
+        error: (err) => {
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra khi cập nhật!';
+          this.snackbar.open(errorMessage, 'Đóng', { duration: 3000, panelClass: 'error-snackbar' });
         }
-        else{
-          this.snackbar.open(res.message,'Đóng',{duration:3000, panelClass:'error-snackbar'});
-          
-        }
+
       });
 
     }
-    else{
-
-    }
+    
   }
 
 
-  private dataURItoBlob(dataURI: string): Blob {
-    const byteString = atob(dataURI);
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-    
-    for (let i = 0; i < byteString.length; i++) {
-      uint8Array[i] = byteString.charCodeAt(i);
-    }
-    
-    return new Blob([uint8Array], { type: 'image/jpeg' });
-  }
+  
 
 }

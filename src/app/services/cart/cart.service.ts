@@ -15,9 +15,6 @@ export class CartService {
 
   getCart():any[]{
     
-
-    console.log("Cart: ", this.cart);
-    console.log("so luong item trong cart: ", this.getItemQuantity());
     return this.cart;
   }
 
@@ -60,7 +57,7 @@ export class CartService {
     let item = this.cart.find(p => p.id === productId);
     if (item) {
       item.quantity += 1;
-      console.log("co tang len")
+      
     }
 
   }

@@ -54,7 +54,7 @@ export class CategoryDialogComponent implements OnInit{
 
     if (this.isEditMode) {
       this.adminService.updateCategory(categoryData).subscribe({
-        next: (res) => {
+        next: () => {
           this.snackBar.open('Cập nhật danh mục thành công!', 'Đóng', { duration: 3000 });
           this.dialogRef.close(true);
         },

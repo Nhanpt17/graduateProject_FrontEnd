@@ -3,7 +3,7 @@
     <div class="product-container">
       <!-- Ảnh sản phẩm -->
       <div class="product-image">
-        <img [src]="product.processedImg" [alt]="product.name" [class.out-of-stock-img]="product.stock <= 0" />
+        <img [src]="product.imgUrl" [alt]="product.name" [class.out-of-stock-img]="product.stock <= 0" />
         <!-- Overlay hết hàng -->
         <div class="out-of-stock-overlay" *ngIf="product.stock <= 0">
           <span>HẾT HÀNG</span>
@@ -68,7 +68,7 @@
       <div class="related-item" *ngFor="let item of relatedProducts" [class.out-of-stock-card]="item.stock <= 0"
         (click)="viewProductDetails(item.id, item.categoryId)">
         <div class="related-image-container">
-          <img [src]="item.processedImg" [alt]="item.name" class="related-image"
+          <img [src]="item.imgUrl" [alt]="item.name" class="related-image"
             [class.out-of-stock-img]="item.stock <= 0" />
           <div class="out-of-stock-overlay" *ngIf="item.stock <= 0">
             <span>HẾT HÀNG</span>

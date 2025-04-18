@@ -45,7 +45,7 @@
         <ng-container matColumnDef="image">
           <th mat-header-cell *matHeaderCellDef>Ảnh</th>
           <td mat-cell *matCellDef="let product">
-            <img [src]="product.processedImg || 'assets/default-product.png'" 
+            <img [src]="product.imgUrl || 'assets/default-product.png'" 
                  alt="{{product.name}}" class="product-image">
           </td>
         </ng-container>

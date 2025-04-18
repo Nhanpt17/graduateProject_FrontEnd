@@ -46,22 +46,18 @@ export class SignupComponent implements OnInit{
 
   onSubmit() {
 
-    console.log(this.registerForm.hasError('passwordMismatch'));
-    console.log("dau cach");
-    console.log(this.registerForm.errors); // Kiểm tra lỗi của FormGroup
-    console.log("dau cach");
+   
 
 
 
     if (this.registerForm.valid) {
-      console.log('Dữ liệu hợp lệ:', this.registerForm.value);
+     
       this.isLoading = true;
 
       this.authService.register(this.registerForm.value).subscribe({
         next: (respone) => {//success
           this.isLoading=false;
-          console.log('du lieu ra ve la');
-          console.log(respone);
+        
           this.snackBar.open('Đăng ký tài khoản thành công!', 'Đóng', { duration: 3000 });
           this.router.navigateByUrl("/login");
         },

@@ -56,8 +56,7 @@ export class ProductDetailPageComponent implements OnInit {
       this.categoryId = Number(params.get('categoryId'));
 
       // Tại đây, bạn có thể gọi API hoặc thực hiện các hành động khác sử dụng productId và categoryId
-      console.log('Product ID:', this.productId);
-      console.log('Category ID:', this.categoryId);
+     
 
       this.getRelatedProducts(this.categoryId, 3);
       this.getProductById(this.productId);
@@ -72,15 +71,7 @@ export class ProductDetailPageComponent implements OnInit {
 
 
   loadReviews(): void {
-    // this.reviewService.getProductReviews(this.productId).subscribe({
-    //   next: (res) => {
-        
-    //     this.reviews = res;
-    //   },
-    //   error: (err) => {
-    //     console.error("Error fetching reviews: ", err);
-    //   }
-    // })
+    
     this.reviewService.getLimitProductReviews(this.productId,5).subscribe({
       next: (res) => {
         
@@ -95,7 +86,7 @@ export class ProductDetailPageComponent implements OnInit {
   loadReviewStats(): void {
     this.reviewService.getProductReviewStats(this.productId).subscribe({
       next: (res) => {
-        console.log(res);
+        
         this.averageRating = res.averageRating || 0;
         this.reviewCount = res.reviewCount || 0;
       },
@@ -145,8 +136,8 @@ export class ProductDetailPageComponent implements OnInit {
         this.selectedRating = 0;
       },
       error: (err) => {
-        console.error("Error submitting review: ", err);
-        this.snackBar.open('Có lỗi xảy ra khi gửi đánh giá', 'Đóng', {
+        const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+        this.snackBar.open(errorMessage, 'Đóng', {
           duration: 3000,
           panelClass: ['error-snackbar']
         });
@@ -201,10 +192,8 @@ export class ProductDetailPageComponent implements OnInit {
 
     this.productService.getLimitProductByCategoryId(categoryId, limit).subscribe({
       next: (res) => {
-        this.relatedProducts = res.map((element: any) => ({
-          ...element,
-          processedImg: element.byteImg ? 'data:image/jpeg;base64,' + element.byteImg : null  // Thêm processedImg nếu có byteImg
-        }))
+       
+        this.relatedProducts = res;
         this.relatedProducts = this.relatedProducts.filter(item => item.id !== this.productId);
 
       },
@@ -217,11 +206,8 @@ export class ProductDetailPageComponent implements OnInit {
   getProductById(productId: number) {
     this.productService.getProductById(productId).subscribe({
       next: (res) => {
-        this.product = {
-          ...res,
-          processedImg: res.byteImg ? 'data:image/jpeg;base64,' + res.byteImg : null  // Thêm processedImg nếu có byteImg
-        }
-        console.log("product: ", this.product);
+        this.product = res;
+        
         this.updateTotalPrice();
       },
       error: (err) => {

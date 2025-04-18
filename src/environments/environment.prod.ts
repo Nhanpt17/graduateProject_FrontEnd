@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    BASIC_URL: "https://graduateproject-production.up.railway.app/"
+    BASIC_URL: "https://graduateproject.onrender.com"
   };
   

@@ -37,9 +37,8 @@ export class RedeemVoucherComponent implements OnInit{
         this.dialogRef.close('success');
       },
       error: (err) => {
-        console.log(err.error.message);
-        console.log(err);
-        this.snackBar.open('Voucher đã hết hạn hoặc Bạn đã từng đổi Voucher này rồi', 'Đóng', { duration: 3000 });
+        const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+        this.snackBar.open(errorMessage, 'Đóng', { duration: 3000 });
       }
     });
   }

@@ -62,7 +62,8 @@ export class CategoryComponent implements OnInit{
         this.categories = res;
       },
       error: (err) => {
-        this.snackBar.open('Lỗi khi tải danh sách danh mục', 'Đóng', { 
+        const errorMessage = err.error?.message || 'Có lỗi xảy ra!';
+        this.snackBar.open(errorMessage, 'Đóng', { 
           duration: 3000,
           panelClass: 'error-snackbar'
         });
