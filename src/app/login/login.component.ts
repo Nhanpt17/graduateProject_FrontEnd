@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { VoucherService } from './../services/voucher/voucher.service';
 import { CartService } from './../services/cart/cart.service';
 import { Component, OnInit } from '@angular/core';
@@ -27,7 +28,8 @@ export class LoginComponent implements OnInit {
     private snackbar: MatSnackBar,
     private checkoutService: CheckoutService,
     private cartService: CartService,
-    private voucherService: VoucherService
+    private voucherService: VoucherService,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +40,14 @@ export class LoginComponent implements OnInit {
 
     this.messageListener = (event: MessageEvent) => {
       if (event.data.type === 'LOGIN_SUCCESS') {
+        // Sau khi đăng nhập thành công, gọi API /cookie để lấy thông tin
+        this.http.get(`${this.BASIC_URL}cookie`, { withCredentials: true })
+          .subscribe({
+            next: (res) => console.log('Cookie info:', res),
+            error: (err) => console.error('Failed to get cookie:', err)
+          });
+
+
         this.authService.getUserInfo().subscribe({
           next: () => {
 
@@ -139,14 +149,14 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
-    
+
 
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading = false;
         //success
-        
-        
+
+
         // Kiểm tra nếu có redirectUrl trong localStorage
         const redirectUrl = localStorage.getItem('redirectUrl');
         const fromCheckout = localStorage.getItem('fromCheckout');
