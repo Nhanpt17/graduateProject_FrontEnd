@@ -41,11 +41,7 @@ export class LoginComponent implements OnInit {
     this.messageListener = (event: MessageEvent) => {
       if (event.data.type === 'LOGIN_SUCCESS') {
         // Sau khi đăng nhập thành công, gọi API /cookie để lấy thông tin
-        this.http.get(`${this.BASIC_URL}cookie`, { withCredentials: true })
-          .subscribe({
-            next: (res) => console.log('Cookie info:', res),
-            error: (err) => console.error('Failed to get cookie:', err)
-          });
+      
 
 
         this.authService.getUserInfo().subscribe({
