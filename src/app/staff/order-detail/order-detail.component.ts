@@ -14,7 +14,7 @@ import { ConfirmCusDialogComponent } from 'src/app/shared/dialogs/confirm-cus-di
 export class OrderDetailComponent implements OnInit{
  
   order: any;
-
+  deliveryName: any;
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
@@ -31,8 +31,11 @@ export class OrderDetailComponent implements OnInit{
 
   loadOrderDetail(orderId: number): void {
     this.orderService.getOrderById(orderId).subscribe({
-      next: (order:any) => {
-        this.order = order;
+      next: (res:any) => {
+        this.order = res.order;
+        if (res.deliveryName) {
+          this.order.deliveryName = res.deliveryName;
+        }
       },
       error: () => {
         this.snackBar.open('Error loading order details', 'Close', { duration: 3000 });

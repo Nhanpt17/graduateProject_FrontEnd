@@ -147,7 +147,7 @@
         <div *ngIf="showDiscountInput" class="discount-input-group">
           <mat-form-field appearance="outline" class="discount-form-field">
             <mat-label>Nhập mã giảm giá</mat-label>
-            <input matInput [(ngModel)]="discountCode" (input)="checkInput()" placeholder="Ví dụ: FREESHIP">
+            <input matInput [(ngModel)]="discountCode" (input)="checkInput()" placeholder="Ví dụ: FREESHIP"  (keydown.enter)="applyDiscount()">
             <mat-hint *ngIf="!discountCode">Nhập mã và nhấn Enter</mat-hint>
           </mat-form-field>
 

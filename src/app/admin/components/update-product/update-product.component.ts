@@ -17,6 +17,8 @@ export class UpdateProductComponent implements OnInit{
   categories : any=[];
   selectedFile!: File | null;
   imagePreview!: string | ArrayBuffer | null;
+  imageUrl: string = ''; // Lưu URL ảnh từ Cloudinary
+  uploading: boolean = false; // trạng thái đang upload
   existingImage: string | null = null;
 
   constructor(private route: ActivatedRoute,
@@ -46,6 +48,7 @@ export class UpdateProductComponent implements OnInit{
   getProductById(id:number):void{
     this.adminService.getProductById(id).subscribe(res =>{
        // Cập nhật giá trị vào form
+       console.log('product: ', res);
        this.productForm.patchValue({
         categoryId: res.categoryId,
         name: res.name,
@@ -54,8 +57,10 @@ export class UpdateProductComponent implements OnInit{
         description: res.description
         
       });
-
-      this.imagePreview = res.imgUrl;
+       // Lưu URL ảnh hiện tại
+       this.imageUrl = res.imgUrl;
+       this.imagePreview = res.imgUrl;
+     
     
     });
   }
@@ -76,6 +81,30 @@ export class UpdateProductComponent implements OnInit{
   onFileSelected(event: any){
     this.selectedFile = event.target.files[0]; // lay file dau tien
     this.previewImage();
+    if (this.selectedFile) {
+      this.uploadImage(this.selectedFile);
+    }
+  }
+
+  uploadImage(file: File) {
+    this.uploading = true;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    this.adminService.uploadImage(formData).subscribe({
+      next: (response) => {
+        this.imageUrl = response.url;
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Lỗi upload ảnh: ', error);
+        this.snackbar.open('Lỗi khi tải ảnh lên', 'Đóng', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        this.uploading = false;
+      }
+    });
   }
 
   getAllCategories():void{
@@ -88,34 +117,50 @@ export class UpdateProductComponent implements OnInit{
 
   updateProduct():void{
     if(this.productForm.valid){
-      const formData: FormData = new FormData();
-      
-      formData.append('id',String(this.productId));
-      if (this.selectedFile) {
-        formData.append('img', this.selectedFile);
-      }else if (this.imagePreview && typeof this.imagePreview === 'string') {
-        // Nếu không chọn file mới, gửi lại URL ảnh cũ (Cloudinary)
-        formData.append('imgUrl', this.imagePreview);
+
+      if (this.uploading) {
+        this.snackbar.open('Ảnh đang được tải lên, vui lòng chờ...', 'Đóng', {
+          duration: 3000,
+          panelClass: ['warning-snackbar']
+        });
+        return;
       }
 
-      formData.append('categoryId',this.productForm.get('categoryId')?.value);
-      formData.append('name',this.productForm.get('name')?.value);
-      formData.append('description',this.productForm.get('description')?.value);
-      formData.append('price',this.productForm.get('price')?.value);
-      formData.append('stock', this.productForm.get('stock')?.value);
+      // Nếu không có ảnh mới được chọn và cũng không có ảnh hiện tại
+      if (!this.imageUrl) {
+        this.snackbar.open('Vui lòng chọn ảnh cho sản phẩm', 'Đóng', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        return;
+      }
 
-      console.log('form data: ', formData);
-      
-      this.adminService.updateProduct(formData).subscribe({
+      const productData = {
+        id: this.productId,
+        imgUrl: this.imageUrl,
+        categoryId: this.productForm.get('categoryId')?.value,
+        name: this.productForm.get('name')?.value,
+        description: this.productForm.get('description')?.value,
+        price: this.productForm.get('price')?.value,
+        stock: this.productForm.get('stock')?.value
+      };
+
+       
+      this.adminService.updateProduct(Number(this.productId),productData).subscribe({
         next: () => {
-          this.snackbar.open('Cập nhật  thành công!', 'Đóng', { duration: 3000 });
-          this.router.navigate(['admin/dashboard'])
+          this.snackbar.open('Cập nhật sản phẩm thành công!', 'Đóng', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.router.navigate(['admin/dashboard']);
         },
         error: (err) => {
-          const errorMessage = err.error?.message || 'Có lỗi xảy ra khi cập nhật!';
-          this.snackbar.open(errorMessage, 'Đóng', { duration: 3000, panelClass: 'error-snackbar' });
+          const errorMessage = err.error?.message || 'Có lỗi xảy ra khi cập nhật sản phẩm!';
+          this.snackbar.open(errorMessage, 'Đóng', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
         }
-
       });
 
     }

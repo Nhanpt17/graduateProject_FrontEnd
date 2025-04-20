@@ -37,6 +37,27 @@
             </div>
         </div>
 
+        <!-- THông tin shipper -->
+        <div class="section" *ngIf="order.deliveryName">
+            <h2>Thông tin giao hàng</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Nhân viên giao hàng:</span>
+                    <span class="value">{{order.deliveryName}}</span>
+                </div>
+                <!-- Có thể thêm các thông tin khác nếu cần -->
+                <div class="info-item" *ngIf="order.deliveryAt">
+                    <span class="label">Thời gian bắt đầu giao:</span>
+                    <span class="value">{{order.deliveryAt | date:'dd/MM/yyyy HH:mm'}}</span>
+                </div>
+
+                <div class="info-item" *ngIf="order.completedAt">
+                    <span class="label">Thời gian hoàn thành:</span>
+                    <span class="value">{{order.completedAt | date:'dd/MM/yyyy HH:mm'}}</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Order Items -->
         <div class="section">
             <h2>Sản phẩm đã đặt</h2>

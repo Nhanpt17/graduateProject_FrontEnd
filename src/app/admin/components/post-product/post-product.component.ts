@@ -14,6 +14,9 @@ export class PostProductComponent implements OnInit {
   categories: any = [];
   selectedFile!: File | null;
   imagePreview!: string | ArrayBuffer | null;
+  imageUrl: string = '';  // Lưu URL ảnh từ Cloudinary
+  uploading: boolean = false; // trạng thái đang upload
+  
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,9 +50,34 @@ export class PostProductComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0]; // lay file dau tien
-    this.previewImage();
+     this.selectedFile = event.target.files[0]; // lay file dau tien
+     this.previewImage();
+     if(this.selectedFile){
+     
+      this.uploadImage(this.selectedFile);
+     }
+    
   }
+
+
+  uploadImage(file :File){
+    this.uploading = true;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    this.adminService.uploadImage(formData).subscribe({
+      next: (response) => {
+        this.imageUrl = response.url;  // Lấy URL từ object response
+        
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Lỗi upload ảnh: ', error);
+        this.uploading = false;
+      }
+    });
+  }
+
 
   getAllCategories(): void {
 
@@ -61,18 +89,27 @@ export class PostProductComponent implements OnInit {
 
   addProduct(): void {
     if (this.productForm.valid) {
-      const formData: FormData = new FormData();
-      if (this.selectedFile) {
-        formData.append('img', this.selectedFile);
+
+
+      if(this.uploading){
+        this.snackbar.open('Ảnh đang được tải lên, vui lòng chờ trong giây lát...', 'Đóng', {
+          duration: 3000,
+          panelClass: ['warning-snackbar'] // Thêm class CSS tùy chỉnh nếu cần
+        });
+        return;
       }
-      formData.append('categoryId', this.productForm.get('categoryId')?.value);
-      formData.append('name', this.productForm.get('name')?.value);
-      formData.append('description', this.productForm.get('description')?.value);
-      formData.append('price', this.productForm.get('price')?.value);
-      formData.append('stock', this.productForm.get('stock')?.value);
+
+      const productData = {
+        imgUrl: this.imageUrl, // link ảnh đã upload lên Cloudinary
+        categoryId: this.productForm.get('categoryId')?.value,
+        name: this.productForm.get('name')?.value,
+        description: this.productForm.get('description')?.value,
+        price: this.productForm.get('price')?.value,
+        stock: this.productForm.get('stock')?.value
+      };
 
 
-      this.adminService.addProduct(formData).subscribe({
+      this.adminService.addProduct(productData).subscribe({
 
         next: () => {
           this.snackbar.open('Thêm sản phẩm thành công!', 'Đóng', { duration: 3000 });

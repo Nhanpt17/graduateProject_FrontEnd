@@ -83,16 +83,18 @@ export class TokenInterceptor implements HttpInterceptor{
                     return next.handle(this.addAccessToken(req,tokendata.accessToken));
                 }),
                 catchError((err)=>{
-                    console.log("gặp lỗi lúc đang yêu cầu gửi lại access token");
-                    this.isRefreshing= false;
-                    UserstorageService.signOut();
-                    localStorage.setItem("logout", Date.now().toString()); // Phát sự kiện logout
-                    this.router.navigate(["/login"]);
                     this.snackbar.open('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!', 'Đóng', {
                         duration: 5000,
                         panelClass: ['snackbar-error'],
                         verticalPosition: 'top' // Hiển thị ở phía trên
                       });
+                    console.log("gặp lỗi lúc đang yêu cầu gửi lại access token");
+                    this.isRefreshing= false;
+                    UserstorageService.signOut();
+                    localStorage.setItem("logout", Date.now().toString()); // Phát sự kiện logout
+                    
+                    this.router.navigate(["/login"]);
+                    
                       
                     return throwError(()=>err);
                 })

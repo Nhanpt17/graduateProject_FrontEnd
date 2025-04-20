@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from './../../../services/product/product.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewService } from 'src/app/customer/service/review.service';
@@ -32,6 +32,7 @@ export class ProductDetailPageComponent implements OnInit {
   reviewCount: number = 0;
   isAuthenticated: boolean = false;
   showCommentSection: boolean = false;
+  @ViewChild('quantityInput') quantityInput!: ElementRef;
   
   constructor(
     private route: ActivatedRoute,
@@ -148,7 +149,7 @@ export class ProductDetailPageComponent implements OnInit {
 
 
   increaseQuantity() {
-    this.quantity++;
+    if (this.quantity < this.product.stock) this.quantity++;
     this.updateTotalPrice();
   }
 
@@ -168,18 +169,13 @@ export class ProductDetailPageComponent implements OnInit {
     }
 
     this.cartService.addToCart2Para(product, quantity);
-    this.snackBar.open('Thêm sản phẩm vào giỏ hàng thành công!', 'Đóng', {
-      duration: 3000, // 3 giây
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['custom-snackbar-success'] // tuỳ chọn CSS
-    });
+    
   }
 
   buyNow2Parameter(product: any, quantity: number) {
     if (product.stock <= 0) return;
 
-    this.cartService.addToCart2Para(product, quantity);
+    this.cartService.addToCart2Para(product, quantity,1);
     this.router.navigate(["/cart"]);
   }
 
@@ -234,4 +230,30 @@ export class ProductDetailPageComponent implements OnInit {
     this.showCommentSection = !this.showCommentSection;
   }
 
+  validateQuantity(value: any) {
+    const parsedValue = Number(value);
+    if (isNaN(parsedValue) || parsedValue < 1) {
+      this.quantity = 1;
+      
+
+    } else {
+      this.quantity = Math.min(parsedValue, this.product.stock);
+      
+
+    }
+    // Gán lại vào input để UI cập nhật
+    this.quantityInput.nativeElement.value = this.quantity;
+
+    this.updateTotalPrice();
+  }
+
+  preventInvalidInput(event: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (
+      !/^\d$/.test(event.key) && 
+      !allowedKeys.includes(event.key)
+    ) {
+      event.preventDefault();
+    }
+  }
 }

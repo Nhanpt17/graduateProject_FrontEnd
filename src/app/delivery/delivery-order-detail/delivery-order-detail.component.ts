@@ -31,8 +31,8 @@ export class DeliveryOrderDetailComponent implements OnInit{
 
   loadOrderDetail(orderId: number): void {
     this.orderService.getOrderById(orderId).subscribe({
-      next: (order) => {
-        this.order = order;
+      next: (res) => {
+        this.order = res.order;
       },
       error: () => {
         // this.snackBar.open('Error loading order details', 'Close', { duration: 3000 });

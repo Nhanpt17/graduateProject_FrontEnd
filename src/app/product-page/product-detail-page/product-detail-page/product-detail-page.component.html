@@ -27,8 +27,11 @@
             <button mat-icon-button (click)="decreaseQuantity()">
               <mat-icon>remove</mat-icon>
             </button>
-            <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock"
-              (ngModelChange)="updateTotalPrice()" />
+            <!-- <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock"
+              (ngModelChange)="updateTotalPrice()" /> -->
+            <input #quantityInput type="number" [(ngModel)]="quantity" min="1" [max]="product.stock"
+              (ngModelChange)="validateQuantity($event)" 
+              (keypress)="preventInvalidInput($event)"/>
             <button mat-icon-button (click)="increaseQuantity()">
               <mat-icon>add</mat-icon>
             </button>
@@ -68,8 +71,7 @@
       <div class="related-item" *ngFor="let item of relatedProducts" [class.out-of-stock-card]="item.stock <= 0"
         (click)="viewProductDetails(item.id, item.categoryId)">
         <div class="related-image-container">
-          <img [src]="item.imgUrl" [alt]="item.name" class="related-image"
-            [class.out-of-stock-img]="item.stock <= 0" />
+          <img [src]="item.imgUrl" [alt]="item.name" class="related-image" [class.out-of-stock-img]="item.stock <= 0" />
           <div class="out-of-stock-overlay" *ngIf="item.stock <= 0">
             <span>HẾT HÀNG</span>
           </div>

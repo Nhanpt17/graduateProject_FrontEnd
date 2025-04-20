@@ -55,24 +55,37 @@ export class CartComponent {
   increaseQuantity(productId: number) {
     this.cartService.increaseQuantity(productId);
     this.cart = this.cartService.getCart();
+    if(this.discountAmount !=0){
+      this.removeVoucher();
+    }
+
     this.calculateTotal();
   }
 
   decreaseQuantity(productId: number) {
     this.cartService.decreaseQuantity(productId);
     this.cart = this.cartService.getCart();
+    if(this.discountAmount !=0){
+      this.removeVoucher();
+    }
     this.calculateTotal();
   }
 
   removeItem(productId: number) {
     this.cartService.removeFromCart(productId);
     this.cart = this.cartService.getCart();
+    if(this.discountAmount !=0){
+      this.removeVoucher();
+    }
     this.calculateTotal();
   }
 
   clearCart() {
     this.cartService.clearCart();
     this.cart = [];
+    if(this.discountAmount !=0){
+      this.removeVoucher();
+    }
     this.calculateTotal();
   }
 
@@ -256,6 +269,6 @@ export class CartComponent {
     }
   }
 
-
+  
 
 }

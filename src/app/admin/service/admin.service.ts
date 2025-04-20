@@ -35,7 +35,9 @@ export class AdminService {
     });
   }
 
-
+  uploadImage(file:any):Observable<any>{
+    return this.http.post(BASIC_URL+'api/file-upload',file);
+  }
 
   addProduct(productDto:any):Observable<any>{
     return this.http.post(BASIC_URL+'api/admin/product',productDto);
@@ -43,8 +45,8 @@ export class AdminService {
 
   
 
-  updateProduct(productDto:any):Observable<any>{
-    return this.http.put(BASIC_URL+'api/admin/update-product',productDto);
+  updateProduct(productId:number,productDto:any):Observable<any>{
+    return this.http.put(BASIC_URL+`api/admin/update-product/${productId}`,productDto);
   }
 
 
