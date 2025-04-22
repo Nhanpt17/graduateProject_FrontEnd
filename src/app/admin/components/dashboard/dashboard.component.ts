@@ -82,17 +82,18 @@ export class DashboardComponent implements OnInit,AfterViewInit{
   }
 
   deleteProduct(productId:number):void{
-    
-
-    this.adminService.deleteProduct(productId).subscribe(res=>{
-      if(res.status === 204){
+    this.adminService.deleteProduct(productId).subscribe({
+      next:()=> {
         this.snackBar.open('Xóa sản phẩm thành công!','Đóng',{duration:3000});
         this.getAllProducts();
-      }
-      else{
-        this.snackBar.open(res.message,'Đóng',{duration:3000, panelClass:'error-snackbar'});
+      },
+      error:(err) =>{
+          const errorMessage = err.error.message || 'Có lỗi xảy ra vui lòng thử lại';
+          this.snackBar.open(errorMessage,'Đóng',{duration:3000, panelClass:'error-snackbar'});
       }
     });
+
+    
   }
   
 
