@@ -100,6 +100,7 @@ export class LoginComponent implements OnInit {
                     } else if (result?.err) {
                       // Hiển thị lỗi
                       console.log("thanh toan that bai - Chitiet:: ", result.err);
+                      this.snackbar.open(`Thanh toán thất bại - ${result.err.error.message}`,'Đóng',{duration:3000})
 
                     }
                   });
@@ -208,6 +209,7 @@ export class LoginComponent implements OnInit {
                 } else if (result?.err) {
                   // Hiển thị lỗi
                   console.log("thanh toan that bai - Chitiet:: ", result.err);
+                  this.snackbar.open(`Thanh toán thất bại - ${result.err.error.message}`,'Đóng',{duration:3000})
 
                 }
               });
