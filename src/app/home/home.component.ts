@@ -5,6 +5,7 @@ import { AppComponent } from './../app.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../services/product/product.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
 // 💌 Các biến liên quan đến form đăng ký email
   subscriberEmail: string = '';
   subscribeMessage: string = '';
+  baseUrl: string = environment.BASIC_URL;
 
   constructor(
      private appComponent: AppComponent,
@@ -115,7 +117,7 @@ slugify(text: string): string {
       return;
     }
 
-    this.http.post('http://localhost:8080/api/mailchimp/subscribe', null, {
+    this.http.post(`${this.baseUrl}api/mailchimp/subscribe`, null, {
       params: { email: this.subscriberEmail }
     }).subscribe({
       next: () => {
