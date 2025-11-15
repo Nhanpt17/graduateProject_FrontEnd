@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-   
+
 
     window.addEventListener("storage", (event) => {
       if (event.key === "logout") {
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
 
         if (!this.flag) {
           this.flag = true;
-         
+
           this.userName = UserstorageService.getUserName();
 
 
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
           else
             this.userAvatar = 'https://res.cloudinary.com/dx9yg1sze/image/upload/v1744909102/samples/balloons.jpg';
 
-          
+
         }
 
       }
@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
 
     })
 
-    
+
     // this.authService.getUserById(Number(UserstorageService.getUserId())).subscribe(res => {
     //   console.log('data lấy ở app:', res);
     // });
@@ -102,6 +102,11 @@ export class AppComponent implements OnInit {
   goToProfile() {
     //this.router.navigate(['/profile']);
   }
+
+
+
+
+
 
 
 
