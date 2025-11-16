@@ -133,6 +133,22 @@
           <span class="total-amount">{{ finalAmount | currency:'VND' }}</span>
         </div>
       </div>
+
+      <!--PAYPAL BUTTON-->
+      <div class="paypal-row">
+        <div id="paypal-button-container" class="paypal-button-container"></div>
+      </div>
+
+
+
+      <div class="vnpay-btn-wrapper">
+        <button mat-stroked-button class="vnpay-button" (click)="vnpayCheckout()">
+          <mat-icon>account_balance_wallet</mat-icon>
+          <span>VNPAY</span>
+        </button>
+      </div>
+
+
     </div>
 
     <div class="cart-summary-right">
@@ -142,12 +158,13 @@
           <mat-icon>{{ showDiscountInput ? 'close' : 'local_offer' }}</mat-icon>
           {{ showDiscountInput ? "Đóng mã giảm giá" : "Áp dụng mã giảm giá" }}
         </button>
-        
-        
+
+
         <div *ngIf="showDiscountInput" class="discount-input-group">
           <mat-form-field appearance="outline" class="discount-form-field">
             <mat-label>Nhập mã giảm giá</mat-label>
-            <input matInput [(ngModel)]="discountCode" (input)="checkInput()" placeholder="Ví dụ: FREESHIP"  (keydown.enter)="applyDiscount()">
+            <input matInput [(ngModel)]="discountCode" (input)="checkInput()" placeholder="Ví dụ: FREESHIP"
+              (keydown.enter)="applyDiscount()">
             <mat-hint *ngIf="!discountCode">Nhập mã và nhấn Enter</mat-hint>
           </mat-form-field>
 
@@ -158,29 +175,31 @@
         </div>
 
         <!-- Phần voucher public (chọn từ danh sách) -->
-    <div *ngIf="availableVouchers.length > 0" class="public-vouchers-container">
-      <mat-form-field appearance="outline" class="voucher-select-field">
-        <mat-label>Chọn voucher của bạn</mat-label>
-        <mat-select [(value)]="selectedVoucherId" (selectionChange)="applyPublicVoucher()">
-          <mat-option [value]="null">-- Không chọn --</mat-option>
-          <mat-option *ngFor="let voucher of availableVouchers" [value]="voucher.id">
-            {{ voucher.code }} - Giảm {{ voucher.discountValue }} {{ voucher.discountType === 'FIXED_AMOUNT' ? 'đ' : '%' }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-       <!-- Hiển thị thông báo lỗi -->
-    <p *ngIf="voucherError" class="invalid-discount">
-      <mat-icon>error_outline</mat-icon>
-      {{ voucherError }}
-    </p>
+        <div *ngIf="availableVouchers.length > 0" class="public-vouchers-container">
+          <mat-form-field appearance="outline" class="voucher-select-field">
+            <mat-label>Chọn voucher của bạn</mat-label>
+            <mat-select [(value)]="selectedVoucherId" (selectionChange)="applyPublicVoucher()">
+              <mat-option [value]="null">-- Không chọn --</mat-option>
+              <mat-option *ngFor="let voucher of availableVouchers" [value]="voucher.id">
+                {{ voucher.code }} - Giảm {{ voucher.discountValue }} {{ voucher.discountType === 'FIXED_AMOUNT' ? 'đ' :
+                '%' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!-- Hiển thị thông báo lỗi -->
+        <p *ngIf="voucherError" class="invalid-discount">
+          <mat-icon>error_outline</mat-icon>
+          {{ voucherError }}
+        </p>
 
-    <!-- Nút hủy áp dụng voucher -->
-    <button *ngIf="discountAmount > 0" mat-stroked-button color="warn" (click)="removeVoucher()" class="remove-voucher-btn">
-      <mat-icon>close</mat-icon>
-      Hủy áp dụng voucher
-    </button>
-  </div>
+        <!-- Nút hủy áp dụng voucher -->
+        <button *ngIf="discountAmount > 0" mat-stroked-button color="warn" (click)="removeVoucher()"
+          class="remove-voucher-btn">
+          <mat-icon>close</mat-icon>
+          Hủy áp dụng voucher
+        </button>
+      </div>
 
       <!-- Nút cho cà phê truyền thống -->
       <button mat-stroked-button class="minimal-coffee-btn" (click)="checkout()">
