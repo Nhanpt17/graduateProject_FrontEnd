@@ -1,6 +1,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from './../../../services/product/product.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Renderer2, Inject, OnDestroy } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewService } from 'src/app/customer/service/review.service';
@@ -42,11 +44,26 @@ export class ProductDetailPageComponent implements OnInit {
     private reviewService: ReviewService,
     private router: Router,
     private fb: FormBuilder
+    ,
+    private titleService: Title,
+    private metaService: Meta,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
 
     this.reviewForm = fb.group({
       comment: ['', Validators.required]
     });
+  }
+
+  private jsonLdElement: HTMLScriptElement | null = null;
+
+  ngOnDestroy(): void {
+    // Clean up injected JSON-LD when component destroyed
+    if (this.jsonLdElement && this.jsonLdElement.parentNode) {
+      this.jsonLdElement.parentNode.removeChild(this.jsonLdElement);
+      this.jsonLdElement = null;
+    }
   }
 
   // ngOnInit(): void {
@@ -128,6 +145,9 @@ loadProductById(id: number) {
 
     // 🔒 Lưu vào cache để xử lý khi copy link
     localStorage.setItem('lastViewedProduct', JSON.stringify(res));
+
+    // Update SEO tags when product data available
+    this.updateSeoTags(this.product);
   });
 }
 
@@ -270,6 +290,8 @@ loadProductById(id: number) {
         this.product = res;
         
         this.updateTotalPrice();
+        // Update SEO tags also here (used when navigating without reloading)
+        this.updateSeoTags(this.product);
       },
       error: (err) => {
         console.error("Error fetching product by category: ", err)
@@ -277,6 +299,91 @@ loadProductById(id: number) {
     });
 
   }
+
+  private updateSeoTags(product: any) {
+  if (!product) return;
+
+  const title = product.name || 'Sản phẩm';
+  const description = (product.description || '').replace(/(<([^>]+)>)/gi, '').trim();
+  const shortDesc = description.length > 160 ? description.slice(0, 157) + '...' : description;
+  const url = this.document.location.origin + this.router.url;
+  const image = product.imgUrl ;
+  // Title và Description
+  this.titleService.setTitle(title + ' | Cửa hàng của chúng tôi - CoffeeMan');
+  this.metaService.updateTag({ name: 'description', content: shortDesc });
+  this.metaService.updateTag({ name: 'keywords', content: (product.tags || []).join(', ') || product.name });
+
+  // Open Graph cho Facebook
+  this.metaService.updateTag({ property: 'og:title', content: title });
+  this.metaService.updateTag({ property: 'og:description', content: shortDesc });
+  this.metaService.updateTag({ property: 'og:url', content: url });
+  this.metaService.updateTag({ property: 'og:site_name', content: 'Cửa hàng của chúng tôi - CoffeeMan' });
+
+  if (image) {
+    this.metaService.updateTag({ property: 'og:image', content: image });
+    this.metaService.updateTag({ property: 'og:image:width', content: '350' });
+    this.metaService.updateTag({ property: 'og:image:height', content: '350' });
+    this.metaService.updateTag({ property: 'og:image:alt', content: title });
+  }
+
+  // Canonical
+  this.updateCanonical(url);
+
+  // JSON-LD
+  this.injectJsonLd(product);
+}
+
+private updateCanonical(url: string) {
+  let link: HTMLLinkElement | null = this.document.querySelector("link[rel='canonical']");
+  if (!link) {
+    link = this.renderer.createElement('link');
+    this.renderer.setAttribute(link, 'rel', 'canonical');
+    this.renderer.appendChild(this.document.head, link);
+  }
+  this.renderer.setAttribute(link, 'href', url);
+}
+
+private injectJsonLd(product: any) {
+  // Remove previous if exists
+  if (this.jsonLdElement && this.jsonLdElement.parentNode) {
+    this.jsonLdElement.parentNode.removeChild(this.jsonLdElement);
+    this.jsonLdElement = null;
+  }
+
+  const offers = {
+    '@type': 'Offer',
+    'priceCurrency': product.currency || 'VND',
+    'price': product.price != null ? String(product.price) : undefined,
+    'availability': product.stock > 0 ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock',
+    'url': this.document.location.origin + this.router.url
+  };
+
+  const aggregateRating: any = this.reviewCount > 0 ? {
+    '@type': 'AggregateRating',
+    'ratingValue': String(this.averageRating || 0),
+    'reviewCount': String(this.reviewCount || 0)
+  } : undefined;
+
+  const jsonLd: any = {
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
+    'name': product.name,
+    'image': product.imageUrls && product.imageUrls.length ? product.imageUrls : undefined,
+    'description': (product.description || '').replace(/(<([^>]+)>)/gi, ''),
+    'sku': product.sku || (product.id ? String(product.id) : undefined),
+    'brand': product.brand || undefined,
+    'offers': offers
+  };
+
+  if (aggregateRating) jsonLd.aggregateRating = aggregateRating;
+
+  const script = this.renderer.createElement('script');
+  this.renderer.setAttribute(script, 'type', 'application/ld+json');
+  script.text = JSON.stringify(jsonLd);
+  this.renderer.appendChild(this.document.head, script);
+  this.jsonLdElement = script;
+}
+
   // viewProductDetails(productId: number, categoryId: number) {
   //   this.productService.viewProductDetails(productId, categoryId);
 
