@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewService } from 'src/app/customer/service/review.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { UserstorageService } from 'src/app/services/storage/userstorage.service';
-
+declare var stButtons: any;
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
@@ -148,6 +148,15 @@ loadProductById(id: number) {
 
     // Update SEO tags when product data available
     this.updateSeoTags(this.product);
+
+    // 🔗 KÍCH HOẠT LẠI SHARETHIS SAU KHI CÓ DỮ LIỆU MỚI
+    setTimeout(() => {
+        if (typeof stButtons !== 'undefined' && this.product.id) {
+            // Cập nhật lại DOM và render các nút dựa trên các thuộc tính data- mới
+            stButtons.locateElements();
+            console.log("ShareThis buttons reloaded.");
+        }
+    }, 100); // Độ trễ nhỏ để đảm bảo DOM đã cập nhật
   });
 }
 
@@ -461,4 +470,25 @@ slugify(text: string): string {
       event.preventDefault();
     }
   }
+  // product-detail-page.component.ts
+
+// ... (các phương thức và thuộc tính khác) ...
+
+// ✅ TẠO GETTER PUBLIC ĐỂ TEMPLATE TRUY CẬP URL HIỆN TẠI
+public get currentProductUrl(): string {
+  // Sử dụng các thuộc tính private (this.document, this.router) an toàn bên trong class
+  return this.document.location.origin + this.router.url;
 }
+public getCleanDescription(description: string | undefined): string {
+  if (!description) {
+    return '';
+  }
+  // 1. Loại bỏ các thẻ HTML
+  const cleanText = description.replace(/(<([^>]+)>)/gi, '');
+  // 2. Cắt ngắn
+  const shortDesc = cleanText.length > 150 ? cleanText.slice(0, 147) + '...' : cleanText;
+  return shortDesc;
+}
+}
+
+
