@@ -13,8 +13,9 @@ import { CategoryComponent } from './components/category/category.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { VoucherManagementComponent } from './components/voucher-management/voucher-management.component';
 import { RevenueReportComponent } from './components/revenue-report/revenue-report.component';
-
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 @NgModule({
   declarations: [
     AdminComponent,
@@ -32,7 +33,10 @@ import { RevenueReportComponent } from './components/revenue-report/revenue-repo
     ReactiveFormsModule,
     HttpClientModule,
     AngularMaterialModule,
-    AdminRoutingModule
+    MatSlideToggleModule,
+    AdminRoutingModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class AdminModule { }

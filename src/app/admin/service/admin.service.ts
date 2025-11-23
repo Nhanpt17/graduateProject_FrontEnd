@@ -1,94 +1,102 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UserstorageService } from 'src/app/services/storage/userstorage.service';
-import { environment } from 'src/environments/environment';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { UserstorageService } from "src/app/services/storage/userstorage.service";
+import { environment } from "src/environments/environment";
 
 const BASIC_URL = environment.BASIC_URL;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AdminService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
-
-  
-
-
-  addCategory(categoryDto:any):Observable<any>{
-    return this.http.post(BASIC_URL+'api/admin/category',categoryDto);
-  }
-  
-  getAllCategories():Observable<any>{
-    return this.http.get(BASIC_URL+'api/admin/categories');
+  addCategory(categoryDto: any): Observable<any> {
+    return this.http.post(BASIC_URL + "api/admin/category", categoryDto);
   }
 
-
-  updateCategory(categoryDto:any):Observable<any>{
-    return this.http.put(BASIC_URL+'api/admin/update-category',categoryDto);
+  getAllCategories(): Observable<any> {
+    return this.http.get(BASIC_URL + "api/admin/categories");
   }
 
-  deleteCategory(categoryId:number):Observable<any>{
-    return this.http.delete(BASIC_URL+`api/admin/category/${categoryId}`,{
-      observe: 'response' // <-- Quan trọng, để lấy status code
+  updateCategory(categoryDto: any): Observable<any> {
+    return this.http.put(BASIC_URL + "api/admin/update-category", categoryDto);
+  }
+
+  deleteCategory(categoryId: number): Observable<any> {
+    return this.http.delete(BASIC_URL + `api/admin/category/${categoryId}`, {
+      observe: "response", // <-- Quan trọng, để lấy status code
     });
   }
 
-  uploadImage(file:any):Observable<any>{
-    return this.http.post(BASIC_URL+'api/file-upload',file);
+  uploadImage(file: any): Observable<any> {
+    return this.http.post(BASIC_URL + "api/file-upload", file);
   }
 
-  addProduct(productDto:any):Observable<any>{
-    return this.http.post(BASIC_URL+'api/admin/product',productDto);
+  addProduct(productDto: any): Observable<any> {
+    return this.http.post(BASIC_URL + "api/admin/product", productDto);
   }
 
-  
-
-  updateProduct(productId:number,productDto:any):Observable<any>{
-    return this.http.put(BASIC_URL+`api/admin/update-product/${productId}`,productDto);
+  updateProduct(productId: number, productDto: any): Observable<any> {
+    return this.http.put(BASIC_URL + `api/admin/update-product/${productId}`, productDto);
   }
 
-
-  getAllProducts():Observable<any>{
-    return this.http.get(BASIC_URL+'api/admin/products');
+  getAllProducts(): Observable<any> {
+    return this.http.get(BASIC_URL + "api/admin/products");
   }
 
-  getProductById(productId:number):Observable<any>{
-    return this.http.get(BASIC_URL+`api/admin/product/${productId}`);
+  getProductById(productId: number): Observable<any> {
+    return this.http.get(BASIC_URL + `api/admin/product/${productId}`);
   }
 
-
-  deleteProduct(productId:number):Observable<any>{
-    return this.http.delete(BASIC_URL+`api/admin/product/${productId}`,{
-      observe: 'response' // <-- Quan trọng, để lấy status code
+  deleteProduct(productId: number): Observable<any> {
+    return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
+      observe: "response", // <-- Quan trọng, để lấy status code
     });
-
-    
   }
 
-  getCategoryById(categoryId: number):Observable<any>{
-    return this.http.get(BASIC_URL+`api/admin/category/${categoryId}`);
+  getCategoryById(categoryId: number): Observable<any> {
+    return this.http.get(BASIC_URL + `api/admin/category/${categoryId}`);
   }
 
-
-  private createAuthorizationHeader():HttpHeaders{
-    return new HttpHeaders().set(
-      'Authorization','Bearer '+ UserstorageService.getAccessToken()
-    );
+  private createAuthorizationHeader(): HttpHeaders {
+    return new HttpHeaders().set("Authorization", "Bearer " + UserstorageService.getAccessToken());
   }
 
-  private createRefreshTokenHeader():HttpHeaders{
-    return new HttpHeaders().set(
-      'Refresh-Token',UserstorageService.getAccessToken()||''
-    );
+  private createRefreshTokenHeader(): HttpHeaders {
+    return new HttpHeaders().set("Refresh-Token", UserstorageService.getAccessToken() || "");
   }
 
-  private createHeader():HttpHeaders{
+  private createHeader(): HttpHeaders {
     return new HttpHeaders()
-    .set('Authorization', 'Bearer ' + UserstorageService.getAccessToken())
-    .set('Refresh-Token',UserstorageService.getAccessToken()||'');
-    
+      .set("Authorization", "Bearer " + UserstorageService.getAccessToken())
+      .set("Refresh-Token", UserstorageService.getAccessToken() || "");
+  }
+  // ========== MESSENGER SETTINGS ==========
+  setMessengerBusy(value: boolean): Observable<any> {
+    return this.http.post(
+      BASIC_URL + `api/admin/messenger/busy?value=${value}`,
+      {},
+      { responseType: "json" }
+    );
   }
 
+  getMessengerStatus(): Observable<any> {
+    return this.http.get(BASIC_URL + "api/admin/messenger/status", { responseType: "json" });
+  }
+  setHoursEnabled(value: boolean): Observable<any> {
+    return this.http.post(
+      BASIC_URL + `api/admin/messenger/hours/enabled?value=${value}`,
+      {},
+      { responseType: "json" }
+    );
+  }
+
+  setHoursRule(rule: string): Observable<any> {
+    return this.http.post(BASIC_URL + "api/admin/messenger/hours/rule", rule, {
+      responseType: "json",
+      headers: new HttpHeaders({ "Content-Type": "text/plain" }),
+    });
+  }
 }

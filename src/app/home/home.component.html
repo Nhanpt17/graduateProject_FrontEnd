@@ -10,16 +10,23 @@
     </div>
   </section>
 
-
   <!-- Sản phẩm nổi bật -->
   <section class="featured-products" #productsSection>
     <h2 class="section-title">Sản phẩm nổi bật</h2>
     <div class="product-grid">
-      <div class="product-card" *ngFor="let product of featuredProducts" [class.out-of-stock-card]="product.stock <= 0"
-        (click)="product.stock > 0 ? viewProductDetails(product) : null">
+      <div
+        class="product-card"
+        *ngFor="let product of featuredProducts"
+        [class.out-of-stock-card]="product.stock <= 0"
+        (click)="product.stock > 0 ? viewProductDetails(product) : null"
+      >
         <div class="product-image-container">
-          <img [src]="product.imgUrl" [alt]="product.name" class="product-image"
-            [class.out-of-stock-img]="product.stock <= 0" />
+          <img
+            [src]="product.imgUrl"
+            [alt]="product.name"
+            class="product-image"
+            [class.out-of-stock-img]="product.stock <= 0"
+          />
 
           <!-- Overlay hết hàng -->
           <div class="out-of-stock-overlay" *ngIf="product.stock <= 0">
@@ -28,7 +35,9 @@
 
           <!-- Overlay nút mua hàng (chỉ hiện khi còn hàng) -->
           <div class="overlay" *ngIf="product.stock > 0">
-            <button class="buy-now" (click)="buyNow(product); $event.stopPropagation()">MUA NGAY</button>
+            <button class="buy-now" (click)="buyNow(product); $event.stopPropagation()">
+              MUA NGAY
+            </button>
             <button class="add-to-cart" (click)="addToCart(product); $event.stopPropagation()">
               THÊM VÀO GIỎ HÀNG
             </button>
@@ -38,14 +47,12 @@
           <h3 class="name">{{ product.name }}</h3>
           <p class="price">{{ product.price | number : "1.0-0" }} đ</p>
           <p class="stock" [class.out-of-stock]="product.stock <= 0">
-            {{ product.stock > 0 ? 'Còn ' + product.stock + ' sản phẩm' : 'Tạm hết hàng' }}
+            {{ product.stock > 0 ? "Còn " + product.stock + " sản phẩm" : "Tạm hết hàng" }}
           </p>
         </div>
       </div>
     </div>
   </section>
-
-
 
   <!-- USP Section -->
   <!-- USP Section -->
@@ -88,16 +95,18 @@
     <div class="story-content">
       <div class="story-text">
         <h2 class="section-title">Câu chuyện của chúng tôi</h2>
-        <p>Từ những hạt cà phê được chọn lọc kỹ càng tại vùng đất Tây Nguyên, chúng tôi mang đến cho bạn tách cà phê
-          nguyên chất với hương vị đậm đà truyền thống. Mỗi hạt cà phê là kết tinh của đất trời và công sức người nông
-          dân.</p>
+        <p>
+          Từ những hạt cà phê được chọn lọc kỹ càng tại vùng đất Tây Nguyên, chúng tôi mang đến cho
+          bạn tách cà phê nguyên chất với hương vị đậm đà truyền thống. Mỗi hạt cà phê là kết tinh
+          của đất trời và công sức người nông dân.
+        </p>
         <button class="btn-secondary" routerLink="/about">Xem thêm</button>
       </div>
       <div class="story-image">
-        
         <img
           src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjcNdfm9u16GyLE5wxLWHpcp_ezsGN5f4zK6OTrveZUB_q_o3-51Fg5xlN7iS3Hb1o0l05BYYioJhPkUO4sHm4VkRd3reHSvTbgSAesjmvDVJbhRcYotLHsAngdoMYUaGRShAT-mOQ1JzU/s1600/DSC02899.jpg"
-          alt="Nông trại cà phê">
+          alt="Nông trại cà phê"
+        />
       </div>
     </div>
   </section>
@@ -110,7 +119,8 @@
         <div class="content-image">
           <img
             src="https://assets.website-files.com/5be96251aaba7a7b19ecdf69/5be96251aaba7ac1c6ecdfd2_Section%20Image%202.jpg"
-            alt="Hướng dẫn pha cà phê">
+            alt="Hướng dẫn pha cà phê"
+          />
         </div>
         <h3>Hướng dẫn pha cà phê ngon</h3>
         <p>Cách pha cà phê phin chuẩn vị Việt Nam</p>
@@ -119,7 +129,8 @@
         <div class="content-image">
           <img
             src="https://assets.website-files.com/5be96251aaba7a7b19ecdf69/5be96251aaba7a6103ecdfcd_brooke-lark-230509-unsplash.jpg"
-            alt="Các loại cà phê">
+            alt="Các loại cà phê"
+          />
         </div>
         <h3>Phân biệt cà phê thật - giả</h3>
         <p>Bí quyết nhận biết cà phê nguyên chất</p>
@@ -128,7 +139,8 @@
         <div class="content-image">
           <img
             src="https://cdn.prod.website-files.com/5be96251aaba7a84f6ecdf81/5be96251aaba7a5e47ece03c_Blog%20Pic%20Head%208.jpg"
-            alt="Lợi ích cà phê">
+            alt="Lợi ích cà phê"
+          />
         </div>
         <h3>Lợi ích của cà phê</h3>
         <p>Vì sao bạn nên uống cà phê mỗi ngày?</p>
@@ -147,9 +159,10 @@
         <div class="testimonial-author">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4gCGKgq7y4QirMpIotegE34NWld24M48JZ1Ah9_5wejQY9WAXfdvr3AQoc_HS814hHfrmlV2UP3RoJhyD6rKYnv5ZzLXQisMZE9M1b8se"
-            alt="Khách hàng 1">
+            alt="Khách hàng 1"
+          />
           <div>
-            <h4> Trần Văn Ngạn</h4>
+            <h4>Trần Văn Ngạn</h4>
             <p>Khách hàng thân thiết</p>
           </div>
         </div>
@@ -161,7 +174,8 @@
         <div class="testimonial-author">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdqbU7OOaCx6IHC_b8vPZ_EMASioeYS13EIjZKkSL-99v0QsdPlPo9ytV04A&s=10"
-            alt="Khách hàng 2">
+            alt="Khách hàng 2"
+          />
           <div>
             <h4>Ngô Hà Lan</h4>
             <p>Khách hàng mới</p>
@@ -173,37 +187,49 @@
 
   <!-- Khuyến mãi/Email Subscription -->
   <section class="promotion-section">
-  <div class="promotion-banner">
-    <h2>Giảm 50% giá trị đơn hàng</h2>
-    <p>Sử dụng mã: <strong>WELCOME50</strong></p>
-    <button class="btn-primary" routerLink="/products">Mua ngay</button>
-  </div>
+    <div class="promotion-banner">
+      <h2>Giảm 50% giá trị đơn hàng</h2>
+      <p>Sử dụng mã: <strong>WELCOME50</strong></p>
+      <button class="btn-primary" routerLink="/products">Mua ngay</button>
+    </div>
 
-  <div class="newsletter">
-    <h3>Đăng ký nhận ưu đãi</h3>
-    <p>Nhận thông tin khuyến mãi và mẹo pha chế cà phê ngon</p>
+    <div class="newsletter">
+      <h3>Đăng ký nhận ưu đãi</h3>
+      <p>Nhận thông tin khuyến mãi và mẹo pha chế cà phê ngon</p>
 
-    <!-- 🔔 Form liên kết với Angular -->
-    <form class="newsletter-form" (ngSubmit)="subscribeToNewsletter()">
-      <input 
-        type="email" 
-        placeholder="Nhập email của bạn"
-        [(ngModel)]="subscriberEmail"
-        name="email"
-        required>
+      <!-- 🔔 Form liên kết với Angular -->
+      <form class="newsletter-form" (ngSubmit)="subscribeToNewsletter()">
+        <input
+          type="email"
+          placeholder="Nhập email của bạn"
+          [(ngModel)]="subscriberEmail"
+          name="email"
+          required
+        />
 
-      <button type="submit" class="btn-primary">Đăng ký</button>
-    </form>
+        <button type="submit" class="btn-primary">Đăng ký</button>
+      </form>
 
-    <!-- 📩 Hiển thị thông báo phản hồi -->
-    <p *ngIf="subscribeMessage" 
-       class="subscribe-message"
-       [ngClass]="{
-         'success': subscribeMessage.includes('✅'),
-         'error': subscribeMessage.includes('❌') || subscribeMessage.includes('⚠️')
-       }">
-      {{ subscribeMessage }}
-    </p>
-  </div>
-</section>
+      <!-- 📩 Hiển thị thông báo phản hồi -->
+      <p
+        *ngIf="subscribeMessage"
+        class="subscribe-message"
+        [ngClass]="{
+          success: subscribeMessage.includes('✅'),
+          error: subscribeMessage.includes('❌') || subscribeMessage.includes('⚠️')
+        }"
+      >
+        {{ subscribeMessage }}
+      </p>
+    </div>
+  </section>
+  <!-- Nút chat Messenger (thay thế Chat Plugin) -->
+  <button
+    class="chat-float"
+    (click)="openMessenger()"
+    aria-label="Chat với chúng tôi trên Messenger"
+  >
+    <!-- icon Messenger đơn giản -->
+    <span class="material-icons">chat</span>
+  </button>
 </div>
