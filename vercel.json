@@ -1,8 +1,0 @@
-{
-  "prerender": {
-    "crawl": true,
-    "pages": [
-      "/product/*"
-    ]
-  }
-}
