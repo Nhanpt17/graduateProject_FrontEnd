@@ -9,8 +9,6 @@ import { ReviewService } from 'src/app/customer/service/review.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { UserstorageService } from 'src/app/services/storage/userstorage.service';
 import { AfterViewInit } from '@angular/core';
-
-declare var stButtons: any;
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
@@ -22,7 +20,7 @@ declare var stButtons: any;
     }
   `]
 })
-export class ProductDetailPageComponent implements OnInit, AfterViewInit  {
+export class ProductDetailPageComponent implements OnInit {
   productId!: number;
   categoryId!: number;
   product: any = {};
@@ -37,7 +35,6 @@ export class ProductDetailPageComponent implements OnInit, AfterViewInit  {
   isAuthenticated: boolean = false;
   showCommentSection: boolean = false;
   @ViewChild('quantityInput') quantityInput!: ElementRef;
-  @ViewChild('shareButtons') shareButtons!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -135,31 +132,7 @@ export class ProductDetailPageComponent implements OnInit, AfterViewInit  {
   });
 }
 
-ngAfterViewInit() {
-  // Delay để ShareThis render xong
-  setTimeout(() => {
-    this.overrideFacebookShare();
-  }, 500);
-}
 
-overrideFacebookShare() {
-  if (!this.shareButtons) return;
-
-  // Lấy nút Facebook trong ShareThis
-  const fbBtn = this.shareButtons.nativeElement.querySelector('.st_facebook_hcount, .st_facebook_custom');
-  if (fbBtn) {
-    fbBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault(); // chặn popup mặc định
-
-      const url = encodeURIComponent(this.currentProductUrl);
-      const title = encodeURIComponent(this.product.name + ' | CoffeeMan');
-      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`;
-
-      // Mở tab mới
-      window.open(fbUrl, '_blank');
-    });
-  }
-}
 
 
 loadProductById(id: number) {
@@ -178,15 +151,6 @@ loadProductById(id: number) {
 
     // Update SEO tags when product data available
     this.updateSeoTags(this.product);
-
-    // 🔗 KÍCH HOẠT LẠI SHARETHIS SAU KHI CÓ DỮ LIỆU MỚI
-    setTimeout(() => {
-        if (typeof stButtons !== 'undefined' && this.product.id) {
-            // Cập nhật lại DOM và render các nút dựa trên các thuộc tính data- mới
-            stButtons.locateElements();
-            console.log("ShareThis buttons reloaded.");
-        }
-    }, 100); // Độ trễ nhỏ để đảm bảo DOM đã cập nhật
   });
 }
 
