@@ -8,6 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewService } from 'src/app/customer/service/review.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { UserstorageService } from 'src/app/services/storage/userstorage.service';
+import { AfterViewInit } from '@angular/core';
+
 declare var stButtons: any;
 @Component({
   selector: 'app-product-detail-page',
@@ -20,7 +22,7 @@ declare var stButtons: any;
     }
   `]
 })
-export class ProductDetailPageComponent implements OnInit {
+export class ProductDetailPageComponent implements OnInit, AfterViewInit  {
   productId!: number;
   categoryId!: number;
   product: any = {};
@@ -35,7 +37,8 @@ export class ProductDetailPageComponent implements OnInit {
   isAuthenticated: boolean = false;
   showCommentSection: boolean = false;
   @ViewChild('quantityInput') quantityInput!: ElementRef;
-  
+  @ViewChild('shareButtons') shareButtons!: ElementRef;
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -131,6 +134,33 @@ export class ProductDetailPageComponent implements OnInit {
     }
   });
 }
+
+ngAfterViewInit() {
+  // Delay để ShareThis render xong
+  setTimeout(() => {
+    this.overrideFacebookShare();
+  }, 500);
+}
+
+overrideFacebookShare() {
+  if (!this.shareButtons) return;
+
+  // Lấy nút Facebook trong ShareThis
+  const fbBtn = this.shareButtons.nativeElement.querySelector('.st_facebook_hcount, .st_facebook_custom');
+  if (fbBtn) {
+    fbBtn.addEventListener('click', (e: Event) => {
+      e.preventDefault(); // chặn popup mặc định
+
+      const url = encodeURIComponent(this.currentProductUrl);
+      const title = encodeURIComponent(this.product.name + ' | CoffeeMan');
+      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`;
+
+      // Mở tab mới
+      window.open(fbUrl, '_blank');
+    });
+  }
+}
+
 
 loadProductById(id: number) {
   this.productService.getProductById(id).subscribe(res => {
