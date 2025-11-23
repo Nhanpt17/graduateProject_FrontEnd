@@ -34,6 +34,7 @@ export class ProductDetailPageComponent implements OnInit {
   reviewCount: number = 0;
   isAuthenticated: boolean = false;
   showCommentSection: boolean = false;
+  currentUrl: string = '';
   @ViewChild('quantityInput') quantityInput!: ElementRef;
 
   constructor(
@@ -146,11 +147,14 @@ loadProductById(id: number) {
     this.quantity = 1;
     this.updateTotalPrice();
 
+    this.currentUrl = this.document.location.origin + this.router.url;
+
     // 🔒 Lưu vào cache để xử lý khi copy link
     localStorage.setItem('lastViewedProduct', JSON.stringify(res));
 
     // Update SEO tags when product data available
     this.updateSeoTags(this.product);
+    this.reloadAddToAny();
   });
 }
 
@@ -406,6 +410,8 @@ viewProductDetails(product: any) {
     this.getRelatedProducts(product.categoryId, 3);
     this.loadReviews();
     this.loadReviewStats();
+    this.reloadAddToAny();
+
   });
 }
 
@@ -469,20 +475,28 @@ slugify(text: string): string {
 // ... (các phương thức và thuộc tính khác) ...
 
 // ✅ TẠO GETTER PUBLIC ĐỂ TEMPLATE TRUY CẬP URL HIỆN TẠI
-public get currentProductUrl(): string {
-  // Sử dụng các thuộc tính private (this.document, this.router) an toàn bên trong class
-  return this.document.location.origin + this.router.url;
-}
-public getCleanDescription(description: string | undefined): string {
-  if (!description) {
-    return '';
+  public get currentProductUrl(): string {
+    // Sử dụng các thuộc tính private (this.document, this.router) an toàn bên trong class
+    return this.document.location.origin + this.router.url;
   }
-  // 1. Loại bỏ các thẻ HTML
-  const cleanText = description.replace(/(<([^>]+)>)/gi, '');
-  // 2. Cắt ngắn
-  const shortDesc = cleanText.length > 150 ? cleanText.slice(0, 147) + '...' : cleanText;
-  return shortDesc;
+  public getCleanDescription(description: string | undefined): string {
+    if (!description) {
+      return '';
+    }
+    // 1. Loại bỏ các thẻ HTML
+    const cleanText = description.replace(/(<([^>]+)>)/gi, '');
+    // 2. Cắt ngắn
+    const shortDesc = cleanText.length > 150 ? cleanText.slice(0, 147) + '...' : cleanText;
+    return shortDesc;
+  }
+
+  reloadAddToAny() {
+    if (window && (window as any).a2a) {
+      (window as any).a2a.init_all();
+    }
+  }
+
 }
-}
+
 
 
