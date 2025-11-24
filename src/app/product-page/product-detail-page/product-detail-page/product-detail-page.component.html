@@ -6,7 +6,7 @@
         <img [src]="product.imgUrl" [alt]="product.name" [class.out-of-stock-img]="product.stock <= 0" />
         <!-- Overlay hết hàng -->
         <div class="out-of-stock-overlay" *ngIf="product.stock <= 0">
-          <span>HẾT HÀNG</span>
+          <span>HẾT HÀNG</span> 
         </div>
       </div>
 
@@ -19,7 +19,7 @@
         <p class="price">{{ totalPrice | number }} đ</p>
 
         <!-- Mô tả -->
-        <p class="description">{{ product.description }}</p>
+        <p class="description">{{ product.description  }}</p>
 
         <!-- Số lượng và stock -->
         <div class="stock-info">
@@ -51,6 +51,14 @@
             [disabled]="product.stock <= 0">
             Thêm vào giỏ hàng
           </button>
+          <div class="a2a_kit a2a_kit_size_35 a2a_default_style"
+            [attr.data-a2a-url]="'https://graduateproject.onrender.com/share/product/' + product.id"
+            [attr.data-a2a-title]="product.name"
+            [attr.data-a2a-media]="product.imgUrl">
+            <a class="a2a_button_facebook"></a>
+        </div>
+        <script async src="https://static.addtoany.com/menu/page.js"></script>
+
         </div>
 
         <!-- Đánh giá -->

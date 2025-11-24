@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewService } from 'src/app/customer/service/review.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { UserstorageService } from 'src/app/services/storage/userstorage.service';
-
+import { AfterViewInit } from '@angular/core';
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
@@ -34,8 +34,9 @@ export class ProductDetailPageComponent implements OnInit {
   reviewCount: number = 0;
   isAuthenticated: boolean = false;
   showCommentSection: boolean = false;
+  currentUrl: string = '';
   @ViewChild('quantityInput') quantityInput!: ElementRef;
-  
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -132,6 +133,9 @@ export class ProductDetailPageComponent implements OnInit {
   });
 }
 
+
+
+
 loadProductById(id: number) {
   this.productService.getProductById(id).subscribe(res => {
     this.product = res;
@@ -143,11 +147,14 @@ loadProductById(id: number) {
     this.quantity = 1;
     this.updateTotalPrice();
 
+    this.currentUrl = this.document.location.origin + this.router.url;
+
     // 🔒 Lưu vào cache để xử lý khi copy link
     localStorage.setItem('lastViewedProduct', JSON.stringify(res));
 
     // Update SEO tags when product data available
     this.updateSeoTags(this.product);
+    setTimeout(() => this.reloadAddToAny(), 500);
   });
 }
 
@@ -403,6 +410,8 @@ viewProductDetails(product: any) {
     this.getRelatedProducts(product.categoryId, 3);
     this.loadReviews();
     this.loadReviewStats();
+    this.reloadAddToAny();
+
   });
 }
 
@@ -461,4 +470,33 @@ slugify(text: string): string {
       event.preventDefault();
     }
   }
+  // product-detail-page.component.ts
+
+// ... (các phương thức và thuộc tính khác) ...
+
+// ✅ TẠO GETTER PUBLIC ĐỂ TEMPLATE TRUY CẬP URL HIỆN TẠI
+  public get currentProductUrl(): string {
+    // Sử dụng các thuộc tính private (this.document, this.router) an toàn bên trong class
+    return this.document.location.origin + this.router.url;
+  }
+  public getCleanDescription(description: string | undefined): string {
+    if (!description) {
+      return '';
+    }
+    // 1. Loại bỏ các thẻ HTML
+    const cleanText = description.replace(/(<([^>]+)>)/gi, '');
+    // 2. Cắt ngắn
+    const shortDesc = cleanText.length > 150 ? cleanText.slice(0, 147) + '...' : cleanText;
+    return shortDesc;
+  }
+
+  reloadAddToAny() {
+    if (window && (window as any).a2a) {
+      (window as any).a2a.init_all();
+    }
+  }
+
 }
+
+
+
