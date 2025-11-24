@@ -3,11 +3,20 @@
   <div class="header-container">
     <div class="header-content">
       <h1 class="page-title">Quản lý sản phẩm</h1>
-      <button mat-flat-button color="primary" [routerLink]="['/admin/product']" class="add-button">
-        <mat-icon>add</mat-icon> Thêm sản phẩm
-      </button>
+
+      <div class="right-controls">
+        <button
+          mat-flat-button
+          color="primary"
+          [routerLink]="['/admin/product']"
+          class="add-button"
+        >
+          <mat-icon>add</mat-icon> Thêm sản phẩm
+        </button>
+      </div>
+
+      <mat-divider></mat-divider>
     </div>
-    <mat-divider></mat-divider>
   </div>
 
   <div class="table-container">
@@ -24,11 +33,13 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef class="header-cell">Hình ảnh</mat-header-cell>
         <mat-cell *matCellDef="let product" class="image-cell">
-          <img [src]="product.imgUrl || 'assets/images/default-product.png'" 
-               alt="Product Image" 
-               class="product-image"
-               matTooltip="Xem hình ảnh"
-               matTooltipPosition="above">
+          <img
+            [src]="product.imgUrl || 'assets/images/default-product.png'"
+            alt="Product Image"
+            class="product-image"
+            matTooltip="Xem hình ảnh"
+            matTooltipPosition="above"
+          />
         </mat-cell>
       </ng-container>
 
@@ -36,9 +47,8 @@
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef class="header-cell">Tên sản phẩm</mat-header-cell>
         <mat-cell *matCellDef="let product" class="name-cell">
-          <span class="product-name" matTooltip="{{product.name}}" matTooltipPosition="above">
-          
-            {{ product.name?.length > 50 ? (product.name | slice:0:50) + '...' : product.name }}
+          <span class="product-name" matTooltip="{{ product.name }}" matTooltipPosition="above">
+            {{ product.name?.length > 50 ? (product.name | slice : 0 : 50) + "..." : product.name }}
           </span>
         </mat-cell>
       </ng-container>
@@ -47,10 +57,12 @@
       <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef class="header-cell">Mô tả</mat-header-cell>
         <mat-cell *matCellDef="let product" class="description-cell">
-          <span matTooltip="{{product.description}}" matTooltipPosition="above">
-            
-            {{ product.description?.length > 50 ? (product.description | slice:0:50) + '...' : product.description }}
-
+          <span matTooltip="{{ product.description }}" matTooltipPosition="above">
+            {{
+              product.description?.length > 50
+                ? (product.description | slice : 0 : 50) + "..."
+                : product.description
+            }}
           </span>
         </mat-cell>
       </ng-container>
@@ -59,16 +71,19 @@
       <ng-container matColumnDef="price">
         <mat-header-cell *matHeaderCellDef class="header-cell">Giá bán</mat-header-cell>
         <mat-cell *matCellDef="let product" class="price-cell">
-          <span class="price-value">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</span>
+          <span class="price-value">{{
+            product.price | currency : "VND" : "symbol" : "1.0-0"
+          }}</span>
         </mat-cell>
       </ng-container>
 
       <!-- Stock Column -->
       <ng-container matColumnDef="stock">
         <mat-header-cell *matHeaderCellDef class="header-cell">Tồn kho</mat-header-cell>
-        <mat-cell *matCellDef="let product" >
-          <span [class]="getStockStatusClass(product.stock)" style="margin-left: 20px;">{{ product.stock }}</span>
-          
+        <mat-cell *matCellDef="let product">
+          <span [class]="getStockStatusClass(product.stock)" style="margin-left: 20px">{{
+            product.stock
+          }}</span>
         </mat-cell>
       </ng-container>
 
@@ -85,14 +100,20 @@
         <mat-header-cell *matHeaderCellDef class="header-cell">Thao tác</mat-header-cell>
         <mat-cell *matCellDef="let product" class="actions-cell">
           <div class="action-buttons">
-            <button mat-icon-button color="primary" 
-                    [routerLink]="['/admin/product', product.id]"
-                    matTooltip="Chỉnh sửa">
+            <button
+              mat-icon-button
+              color="primary"
+              [routerLink]="['/admin/product', product.id]"
+              matTooltip="Chỉnh sửa"
+            >
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" 
-                    (click)="openConfirmDialog(product.id)"
-                    matTooltip="Xóa">
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="openConfirmDialog(product.id)"
+              matTooltip="Xóa"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -100,16 +121,101 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></mat-row>
     </mat-table>
 
-    <mat-paginator [length]="length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               [pageIndex]="pageIndex"
-               (page)="handlePageEvent($event)"
-               showFirstLastButtons
-               class="product-paginator">
-</mat-paginator>
+    <mat-paginator
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex"
+      (page)="handlePageEvent($event)"
+      showFirstLastButtons
+      class="product-paginator"
+    >
+    </mat-paginator>
+  </div>
+  <!-- ========== CÀI ĐẶT MESSENGER (DƯỚI CÙNG) ========== -->
+  <div class="messenger-settings-section">
+    <mat-divider></mat-divider>
+
+    <div class="messenger-settings-card mat-elevation-z2">
+      <div class="messenger-settings-header">
+        <div class="messenger-header-left">
+          <mat-icon class="messenger-main-icon">chat</mat-icon>
+          <div>
+            <div class="messenger-settings-title">Cài đặt trả lời Messenger</div>
+            <div class="messenger-settings-subtitle">
+              Quản lý chế độ bận và khung giờ làm việc của bot.
+            </div>
+          </div>
+        </div>
+
+        <div class="messenger-status-chip" [ngClass]="busy ? 'status-busy' : 'status-normal'">
+          <span class="status-dot"></span>
+          <span>{{ busy ? "BẬN / AUTO-REPLY" : "ONLINE" }}</span>
+        </div>
+      </div>
+
+      <div class="messenger-settings-body">
+        <div class="messenger-row">
+          <div class="row-text">
+            <div class="row-label">Chế độ bận</div>
+            <div class="row-desc">
+              Khi bật, mọi tin nhắn sẽ nhận auto-reply “đang bận/ngoài giờ”.
+            </div>
+          </div>
+          <mat-slide-toggle
+            [checked]="busy"
+            (change)="onToggleBusy($event.checked)"
+            [disabled]="busyLoading"
+            color="primary"
+            matTooltip="Bật để auto-reply khi bận"
+          >
+            {{ busy ? "BẬT" : "TẮT" }}
+          </mat-slide-toggle>
+        </div>
+
+        <div class="messenger-row">
+          <div class="row-text">
+            <div class="row-label">Giờ làm việc</div>
+            <div class="row-desc">Khi bật, auto-reply chỉ kích hoạt ngoài khung giờ làm việc.</div>
+          </div>
+          <mat-slide-toggle
+            [checked]="hoursEnabled"
+            (change)="onToggleHours($event.checked)"
+            [disabled]="busyLoading"
+            color="accent"
+            matTooltip="Bật để chỉ auto-reply ngoài giờ"
+          >
+            {{ hoursEnabled ? "ÁP DỤNG" : "BỎ QUA" }}
+          </mat-slide-toggle>
+        </div>
+
+        <div class="messenger-hours-row">
+          <mat-form-field appearance="outline" class="hours-field">
+            <mat-label>Rule giờ làm việc</mat-label>
+            <input
+              matInput
+              [(ngModel)]="hoursRule"
+              [disabled]="busyLoading"
+              placeholder='VD: 09:00-18:00,Mon-Fri hoặc "All"'
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="onSaveHoursRule()"
+              [disabled]="busyLoading"
+              matTooltip="Lưu rule"
+            >
+              <mat-icon>save</mat-icon>
+            </button>
+          </mat-form-field>
+          <small class="hours-hint">
+            Ví dụ: <b>09:00-18:00,Mon-Fri</b> hoặc <b>All</b> (mọi ngày, mọi giờ).
+          </small>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
