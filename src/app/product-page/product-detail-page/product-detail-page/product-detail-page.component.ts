@@ -154,7 +154,7 @@ loadProductById(id: number) {
 
     // Update SEO tags when product data available
     this.updateSeoTags(this.product);
-    this.reloadAddToAny();
+    setTimeout(() => this.reloadAddToAny(), 500);
   });
 }
 
